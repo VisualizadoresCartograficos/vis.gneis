@@ -1,0 +1,85 @@
+header {
+  height: 50px;
+  background-color: #364B5F;
+  z-index: 999999;
+}
+
+header #header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0px 8px;
+}
+
+header .logos {
+  display: flex;
+  align-items: center;
+}
+
+header .logos #ministerio {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+}
+
+header .logos #ministerio #title {
+  display: flex;
+  justify-content: center;
+  text-transform: uppercase;
+  color: #B9B9B9;
+}
+
+header .logos img {
+  max-height: 46px;
+  margin-left: 4px;
+  cursor: pointer;
+}
+
+
+header #right-section {
+  display: flex;
+  align-items: center;
+}
+
+header #title {
+  color: white;
+  padding: 0 8px;
+  font-weight: bold;
+}
+
+#languages {
+  display: flex;
+  flex-direction: column;
+  width: 20px;
+  margin: 4px 8px;
+  justify-content: space-between;
+}
+
+header #languages>span {
+  color: white;
+  cursor: pointer;
+}
+
+#languages .lang-selected:hover,
+#languages .lang-option:hover {
+  text-decoration: underline;
+}
+
+#languages .lang-selected {
+  font-weight: bold;
+
+}
+
+@media (max-width: 980px) {
+  #ign {
+    display: none;
+  }
+}
+
+@media (max-width: 700px) {
+  #ministerio {
+    display: none;
+  }
+}

@@ -1,0 +1,11 @@
+.visor-wrapper {
+    overflow: hidden;
+    height: calc(100vh - 50px);
+}
+
+.visor-wrapper .map {
+    border: 0;
+    width: 100%;
+    transition: all .3s ease-in-out;
+    height: 100dvh;
+}
