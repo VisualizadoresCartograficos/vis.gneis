@@ -1,11 +1,30 @@
+.content-wrapper {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	min-height: 0;
+}
+
 .visor-wrapper {
-    overflow: hidden;
-    height: calc(100vh - 50px);
+	overflow: hidden;
+	height: calc(100vh - 56px);
+	flex: 1;
+	min-height: 0;
+}
+
+.visor-wrapper--no-header {
+	height: 100%;
+	flex: 1;
+	min-height: 0;
 }
 
 .visor-wrapper .map {
-    border: 0;
-    width: 100%;
-    transition: all .3s ease-in-out;
-    height: 100dvh;
+	border: 0;
+	width: 100%;
+	transition: all .3s ease-in-out;
+	height: 100%;
+}
+
+.visor-wrapper--no-header .map {
+	height: 100%;
 }

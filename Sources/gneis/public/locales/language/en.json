@@ -1,8 +1,37 @@
 {
     "header": {
-        "title": "GNEIS viewer"
+        "title": "GNEIS viewer",
+        "brand": "Spanish Geospatial Hub for Satellite Imagery",
+        "portal": "Go to portal",
+        "login": "Login",
+        "logout": "Log out",
+        "langSelector": "Language",
+        "altMinisterio": "Institutional logo",
+        "altGneis": "GNEIS logo"
     },
     "viewer": {
-        
+
+    },
+    "visor": {
+        "map": "Map",
+        "image": "Image",
+        "street_map": "Street map",
+        "hybrid": "Hybrid",
+        "lidar": "LiDAR (Elevation)",
+        "corine": "Land occupation",
+        "historic": "Historical Maps",
+        "ciudadano": "City map"
+    },
+    "login": {
+        "title": "GNEIS access",
+        "subtitle": "Sign in to see the collections for your profile, or continue as a guest to access public collections only.",
+        "username": "Username",
+        "password": "Password",
+        "submit": "Sign in",
+        "loggingIn": "Signing in…",
+        "guest": "Continue as guest",
+        "close": "Close",
+        "errorRequired": "Please enter username and password.",
+        "errorGeneric": "Could not sign in. Check your credentials."
     }
 }

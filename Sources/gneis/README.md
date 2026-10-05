@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Visualizador GNEIS
 
-## Getting Started
+App Next.js del visor de mapas (API-IDEE + catálogo STAC).
 
-First, run the development server:
+## Docker (producción)
+
+La configuración de URLs va en los Dockerfiles (defaults). No hace falta pasar todos los `--build-arg`.
+
+| Entorno | Dockerfile | Portal por defecto |
+|---------|------------|--------------------|
+| CNIG / cliente | `Dockerfile.cnig` | `http://10.67.33.172:8180` |
+
+
+
+### CNIG (con proxy)
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+docker build -f Dockerfile.cnig \
+  --build-arg HTTP_PROXY=$HTTP_PROXY \
+  --build-arg HTTPS_PROXY=$HTTPS_PROXY \
+  --build-arg NO_PROXY=$NO_PROXY \
+  -t gneis-front-visualizador:prod \
+  .
+
+docker run -d --name gneis-visualizador --restart unless-stopped \
+  -p 8280:8280 gneis-front-visualizador:prod
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Más detalle: [comandos.md](./comandos.md).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Puerto del contenedor: **8280**. App en `/gneis`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Desarrollo local
 
-## Learn More
+```bash
+npm install
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Usa `.env.local` (solo local; no entra en la imagen Docker).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Variables (build-time)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `NEXT_PUBLIC_API_IDEE_URL` / `NEXT_PUBLIC_API_IDEE_PLUGINS_URL`
+- `NEXT_PUBLIC_GNEIS_PORTAL_URL`
+- `NEXT_PUBLIC_GNEIS_STAC_URL`
+- `NEXT_PUBLIC_GNEIS_DOWNLOAD_URL`
+- `NEXT_PUBLIC_ASSET_VERSION` — cache-buster de CSS/JS API-IDEE (`?v=`)
+- `PAGE_TITLE`

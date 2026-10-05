@@ -1,8 +1,37 @@
 {
     "header": {
-        "title": "Visualizador GNEIS"
+        "title": "Visualizador GNEIS",
+        "brand": "Geonodo Español de Imágenes Satelitales",
+        "portal": "Acceso al portal",
+        "login": "Login",
+        "logout": "Salir",
+        "langSelector": "Idioma",
+        "altMinisterio": "Logo institucional",
+        "altGneis": "Logo GNEIS"
     },
     "viewer": {
 
+    },
+    "visor": {
+        "map": "Mapa",
+        "image": "Imagen",
+        "street_map": "Callejero",
+        "hybrid": "Híbrido",
+        "lidar": "LiDAR (Relieve)",
+        "corine": "Ocupación del suelo",
+        "historic": "Mapas Históricos",
+        "ciudadano": "Mapa Ciudadano"
+    },
+    "login": {
+        "title": "Acceso a GNEIS",
+        "subtitle": "Inicia sesión para ver las colecciones de tu perfil, o continúa como invitado para acceder solo a las colecciones públicas.",
+        "username": "Usuario",
+        "password": "Contraseña",
+        "submit": "Iniciar sesión",
+        "loggingIn": "Accediendo…",
+        "guest": "Continuar como invitado",
+        "close": "Cerrar",
+        "errorRequired": "Indica usuario y contraseña.",
+        "errorGeneric": "No se pudo iniciar sesión. Revisa las credenciales."
     }
 }

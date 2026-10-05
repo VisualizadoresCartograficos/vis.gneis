@@ -1,62 +1,164 @@
 'use client';
-import { Component, Fragment } from 'react';
+import { Component } from 'react';
 import { withTranslation } from 'react-i18next';
 import i18n from '@/app/languages/i18n';
 
 import './Header.css';
 
 import MINISTERIO from '@/assets/logos/logo_ministerio.png';
-import IGN from '@/assets/logos/logo_ign.png';
+import GNEIS from '@/assets/logos/Logo-GNEIS.svg';
+import {
+	AUTH_CHANGED_EVENT,
+	getActiveAuth,
+	resolveProfileLabel,
+	resolveUserEmail,
+} from '@/utils/sessionAuth';
 
 class Header extends Component {
+	constructor(props) {
+		super(props);
+		const auth = typeof window !== 'undefined' ? getActiveAuth() : null;
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      langSelected: window.localStorage.i18nextLng || 'es',
-    };
-  }
+		this.state = {
+			langSelected: window.localStorage.i18nextLng || 'es',
+			auth,
+			profileLabel: resolveProfileLabel(auth?.roles),
+			userEmail: resolveUserEmail(auth),
+		};
+	}
 
-  changeLanguage = (lang) => {
-    this.setState({ langSelected: lang }, () => {
-      i18next.changeLanguage(lang); // This changes the language in i18next, which is used for translations (e.g., i18n.t('header.title'))
-      window.IDEE.language.setLang(lang); // This changes the language in the API-IDEE, but we need to implement an event trigger (e.g., mapjs.on('change_language', ()=>{})) to render the plugins
-    });
-  }
+	componentDidMount() {
+		window.addEventListener(AUTH_CHANGED_EVENT, this.handleAuthChanged);
+		this.syncAuthFromStore();
+	}
 
-  navigate = () => {
-    window.location.href = '/gneis';
-  }
+	componentWillUnmount() {
+		window.removeEventListener(AUTH_CHANGED_EVENT, this.handleAuthChanged);
+	}
 
-  goToIGN = () => {
-    window.open('https://www.ign.es/web/ign/portal');
-  }
+	syncAuthFromStore = () => {
+		const auth = getActiveAuth();
 
-  render() {
-    const { langSelected } = this.state;
+		this.setState({
+			auth,
+			profileLabel: resolveProfileLabel(auth?.roles),
+			userEmail: resolveUserEmail(auth),
+		});
+	};
 
-    return (<Fragment>
-      <header className='h-desktop'>
-        <div id='header-content'>
-          <div className='logos'>
-            <div id='ministerio'>
-              <img src={MINISTERIO.src} alt='Logo' />
-            </div>
-            <div id='ign'>
-              <img src={IGN.src} onClick={this.goToIGN} alt='Logo' />
-            </div>
-          </div>
-          <div id='right-section'>
-            <label id='title' style={{ fontSize: window.innerWidth <= process.env.NEXT_PUBLIC_SMARTHPHONE_WIDTH ? '18px' : '16px' }}>{i18n.t('header.title')}</label>
-            <div id='languages'>
-              <span className={langSelected === 'es' ? 'lang-selected' : 'lang-option'} onClick={this.changeLanguage.bind(null, 'es')}>es</span>
-              <span className={langSelected === 'en' ? 'lang-selected' : 'lang-option'} onClick={this.changeLanguage.bind(null, 'en')}>en</span>
-            </div>
-          </div>
-        </div>
-      </header>
-    </Fragment>);
-  }
+	handleAuthChanged = () => {
+		this.syncAuthFromStore();
+	};
+
+	changeLanguage = (lang) => {
+		if (lang === this.state.langSelected) {
+			return;
+		}
+
+		this.setState({ langSelected: lang }, () => {
+			i18n.changeLanguage(lang);
+			if (window.IDEE?.language?.setLang) {
+				window.IDEE.language.setLang(lang);
+			}
+			window.location.reload();
+		});
+	};
+
+	goToPortal = () => {
+		const portalUrl = (process.env.NEXT_PUBLIC_GNEIS_PORTAL_URL || '').replace(/\/$/, '');
+
+		if (!portalUrl) {
+			console.warn('[Visor:Header] NEXT_PUBLIC_GNEIS_PORTAL_URL no configurada');
+
+			return;
+		}
+
+		window.location.href = portalUrl;
+	};
+
+	render() {
+		const { langSelected, auth, profileLabel, userEmail } = this.state;
+		const { t, onRequestLogin, onLogout } = this.props;
+		const isLoggedIn = !!auth?.access_token;
+
+		return (
+			<header className="visor-header">
+				<div className="visor-header__inner">
+					<div className="visor-header__brand">
+						<img
+							className="visor-header__logo-ministerio"
+							src={MINISTERIO.src || MINISTERIO}
+							alt={t('header.altMinisterio')}
+						/>
+						<img
+							className="visor-header__logo-gneis"
+							src={GNEIS.src || GNEIS}
+							alt={t('header.altGneis')}
+						/>
+						<span className="visor-header__claim">{t('header.brand')}</span>
+					</div>
+
+					<div className="visor-header__actions">
+						<nav className="visor-header__lang" aria-label={t('header.langSelector')}>
+							<button
+								type="button"
+								className={`visor-header__lang-link${langSelected === 'es' ? ' is-active' : ''}`}
+								onClick={() => this.changeLanguage('es')}
+								aria-current={langSelected === 'es' ? 'true' : undefined}
+							>
+								ES
+							</button>
+							<span className="visor-header__lang-sep" aria-hidden="true">|</span>
+							<button
+								type="button"
+								className={`visor-header__lang-link${langSelected === 'en' ? ' is-active' : ''}`}
+								onClick={() => this.changeLanguage('en')}
+								aria-current={langSelected === 'en' ? 'true' : undefined}
+							>
+								EN
+							</button>
+						</nav>
+
+						{isLoggedIn ? (
+							<>
+								<div className="visor-header__user" title={userEmail || undefined}>
+									{userEmail ? (
+										<span className="visor-header__user-email">{userEmail}</span>
+									) : null}
+									{profileLabel ? (
+										<span className="visor-header__user-role">{profileLabel}</span>
+									) : null}
+								</div>
+								<button
+									type="button"
+									className="visor-header__btn-logout"
+									onClick={onLogout}
+								>
+									{t('header.logout')}
+								</button>
+							</>
+						) : (
+							<button
+								type="button"
+								className="visor-header__btn-login"
+								onClick={onRequestLogin}
+							>
+								{t('header.login')}
+							</button>
+						)}
+
+						<button
+							type="button"
+							className="visor-header__btn-portal"
+							onClick={this.goToPortal}
+						>
+							{t('header.portal')}
+						</button>
+					</div>
+				</div>
+			</header>
+		);
+	}
 }
 
 export default withTranslation()(Header);

@@ -1,0 +1,1398 @@
+/* CATALOGMANAGER */
+#advanced-filter-query-container select {
+    background-color: #fff;
+    border-color: gray;
+}
+
+#m-catalogmanager-filters-catalogs-content {
+    background-color: #fff;
+    border-color: #07274a;
+}
+
+.action-btn {
+    background-color: transparent;
+    color: #2ecc71;
+}
+
+.loading {
+    background-color: #fffbfb;
+}
+
+.m-areas>div.m-area.m-right>div.m-plugin-catalogmanager.opened>button.m-panel-btn,
+.m-areas>div.m-area.m-left>div.m-plugin-catalogmanager.opened>button.m-panel-btn {
+    background-color: #07274a;
+}
+
+.m-areas>div.m-area>div.m-plugin-catalogmanager.collapsed>button.m-panel-btn,
+.m-areas>div.m-area>div.m-plugin-catalogmanager.opened>button.m-panel-btn,
+.dialog-btn {
+    background-color: #07274a !important;
+    color: white !important;
+}
+
+.m-catalogmanager #m-catalogmanager-fieldstable td,
+.m-catalogmanager #m-catalogmanager-typetable td {
+    border-color: #ddd;
+}
+
+.m-catalogmanager #m-catalogmanager-fieldstable td.focus,
+.m-catalogmanager #m-catalogmanager-typetable td.focus {
+    background-color: #a6cded;
+}
+
+.m-catalogmanager .filtered-search-title {
+    color: #148aeb;
+}
+
+.m-catalogmanager-actions button,
+#m-catalogmanager-filters-temporal-predefined button,
+.m-catalogmanager-items-buttons button,
+.m-catalogmanager-collections-order-button,
+#m-catalogmanager-filters-spatial-predefined button,
+.m-catalogmanager #m-catalogmanager-operators-container>button,
+.m-catalogmanager #m-catalogmanager-options-buttons>button,
+.m-catalogmanager #m-attributetable-tfoot>button {
+    background-color: white;
+    border-color: #07274a;
+    color: #07274a;
+}
+
+.m-catalogmanager-actions button:hover,
+#m-catalogmanager-filters-temporal-predefined button:hover,
+#m-catalogmanager-filters-spatial-predefined button:hover,
+.m-catalogmanager-collections-order-button:hover,
+.m-catalogmanager-actions button.active,
+#m-catalogmanager-filters-temporal-predefined button.active,
+#m-catalogmanager-filters-spatial-predefined button.active,
+.m-catalogmanager-collections-order-button.active,
+#add-catalog,
+.m-catalogmanager #m-catalogmanager-operators-container>button:hover,
+.m-catalogmanager #m-catalogmanager-options-buttons>button:hover,
+.m-catalogmanager #m-attributetable-tfoot>button:hover {
+    background-color: #07274a;
+    color: white;
+}
+
+.m-catalogmanager-cloudcover-slider-label {
+    color: #000;
+}
+
+.m-catalogmanager-cloudcover-slider-values {
+    color: #07274a;
+}
+
+.m-catalogmanager-download-browser-note,
+.m-catalogmanager .m-catalogmanager-type-hint {
+    color: #666;
+}
+
+.m-catalogmanager-download-progress {
+    background: #07274a;
+    color: #fff;
+}
+
+.m-catalogmanager-dual-range-input,
+.m-catalogmanager-dual-range-input::-webkit-slider-runnable-track,
+.m-catalogmanager-dual-range-input::-moz-range-track {
+    background: transparent;
+}
+
+.m-catalogmanager-dual-range-input::-webkit-slider-thumb,
+.m-catalogmanager-dual-range-input::-moz-range-thumb {
+    background: #07274a;
+    border-color: #fff;
+}
+
+.m-catalogmanager-dual-range-track {
+    background: linear-gradient(
+        to right,
+        #fff 0%,
+        #fff var(--cc-min, 0%),
+        #07274a var(--cc-min, 0%),
+        #07274a var(--cc-max, 100%),
+        #fff var(--cc-max, 100%),
+        #fff 100%
+    );
+    border-color: #d1d5db;
+}
+
+.m-catalogmanager-items-buttons button:disabled {
+    border-color: #ccc;
+    color: #ccc;
+}
+
+.m-catalogmanager-section-title {
+    border-bottom-color: #07274a;
+}
+
+.m-catalogmanager-tab.active {
+    background-color: #fff;
+    border-bottom-color: #07274a;
+    color: #07274a;
+}
+
+.m-control.m-container.m-catalogmanager>header .title {
+    background-color: #f4f4f4;
+    border-bottom-color: rgba(0, 0, 0, 0.08);
+    color: #000 !important;
+}
+
+.m-plugin-catalogmanager.opened #div-contenedor {
+    background-color: white !important;
+    color: #000;
+}
+
+div.m-catalogmanager-collections-list div>.m-catalogmanager-title-collection {
+    background-color: #fff;
+    border-color: #07274a;
+    color: #07274a;
+}
+
+div.m-catalogmanager-collections-list div>.m-catalogmanager-title-collection:hover,
+div.m-catalogmanager-collections-list div>.m-catalogmanager-title-collection.active,
+.m-catalogmanager-title-item.active,
+.m-catalogmanager-tag {
+    background-color: #07274a;
+    color: #fff;
+}
+
+table.m-catalogmanager-tableimages tbody {
+    background-color: #f5f5f5;
+}
+
+table.m-catalogmanager-tableimages tbody tr {
+    border-bottom-color: #e6e6e6;
+}
+
+table.m-catalogmanager-tableimages thead {
+    background-color: #e6e6e6;
+}
+
+table.m-catalogmanager-tableimages tr>.m-catalogmanager-title-image {
+    color: black;
+}
+
+ul.m-catalogmanager-ulcatalogs li {
+    border-color: rgb(194, 194, 194);
+}
+
+ul.m-catalogmanager-ulcatalogs li>.m-catalogmanager-title-catalog {
+    background-color: #a6cded;
+    border-left-color: #148aeb;
+    color: black;
+}
+
+ul.m-catalogmanager-ulcatalogs span.g-cartografia-catalog-lock {
+    background-color: #fbe3b6;
+    color: #fba300;
+}
+
+ul.m-catalogmanager-ulcatalogs span.g-cartografia-catalog-lock-open {
+    background-color: #baffaa;
+    color: #27d400;
+}
+
+ul.m-catalogmanager-ulcollections li>.m-catalogmanager-title-collection {
+    background-color: #f8f4f4;
+    color: black;
+}
+
+/* FIN CATALOGMANAGER */
+
+/* LAYERSWITCHER */
+#m-layerswitcher-addservices-codsi-pagination button.m-layerswitcher-addservices-pagination-btn:disabled {
+    background-color: #eeeeee;
+    border-color: #eeeeee;
+    color: #767676;
+}
+
+#m-layerswitcher-addservices-results .m-layerswitcher-capabilities-container,
+#m-layerswitcher-addservices-results .m-layerswitcher-capabilities-container-wfs,
+.m-layerswitcher-table-results .m-layerswitcher-table-container {
+    border-color: #ccc;
+}
+
+#m-layerswitcher-hsalllayers {
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+#m-layerswitcher-ogc-vectors-select {
+    background: #fff;
+}
+
+#m-layerswitcher-ogc-vectors-select,
+#m-layerswitcher-style-select {
+    background-color: white;
+    border-color: #222;
+    color: #222;
+}
+
+#m-layerswitcher-ogcCContainer>div:after,
+.m-layerswitcher-style-container:after {
+    background-color: white;
+    color: black;
+}
+
+.m-dialog.error div.m-button>button {
+    background-color: #07274a !important;
+}
+
+.m-layerswitcher-addservice {
+    background-color: #07274a;
+    border-color: rgba(64, 64, 64, .19215686274509805);
+    color: #fff;
+}
+
+.m-layerswitcher-addservices .m-layerswitcher-search-panel .input-container span button,
+.m-layerswitcher-addservices-codsi-search-panel span {
+    color: #6c6c6c !important;
+}
+
+.m-layerswitcher-allstatus {
+    background-color: #f9f9f9;
+    color: orange !important;
+}
+
+.m-layerswitcher-change-name button {
+    background-color: #07274a;
+    color: #fff;
+}
+
+.m-layerswitcher-common-btn,
+.m-layerswitcher-style-common-btn,
+#m-layerswitcher-addservices-codsi-pagination button.m-layerswitcher-addservices-pagination-btn {
+    background-color: #07274a;
+    border-color: #07274a;
+    color: white;
+}
+
+.m-layerswitcher-common-btn {
+    background-color: #07274a;
+    border-color: #07274a;
+    color: #fff;
+}
+
+.m-layerswitcher-container,
+.m-layerswitcher-title-layer button {
+    background-color: transparent;
+}
+
+.m-layerswitcher-container #m-layerswitcher-panel,
+.m-layerswitcher-title,
+ul.m-layerswitcher-ullayers .m-layerswitcher-sectionPanel-colorPanel {
+    background-color: #f4f4f4;
+}
+
+.m-layerswitcher-container .m-layerswitcher-type,
+.sortable-chosen .m-layerswitcher-type {
+    background-color: #9a9a9a;
+    color: white;
+}
+
+.m-layerswitcher-container input[type="radio"] {
+    background-color: white;
+    border-color: #6abe47;
+}
+
+.m-layerswitcher-container input[type="radio"]:checked {
+    background-color: #6abe47;
+    border-color: #6abe47;
+}
+
+.m-layerswitcher-container input[type=range]::-webkit-slider-runnable-track,
+.m-layerswitcher-container input[type=range]::-moz-range-track {
+    background: rgba(0, 0, 0, 0.31);
+}
+
+.m-layerswitcher-container input[type=range]::-webkit-slider-thumb,
+.m-layerswitcher-container input[type=range]::-moz-range-thumb {
+    background: #FFF;
+    background-color: #fda823;
+}
+
+.m-layerswitcher-content ul li {
+    border-color: rgba(138, 134, 134, 0.73);
+}
+
+.m-layerswitcher-gray-shadow {
+    background-color: #D1E6F8;
+}
+
+.m-layerswitcher-groups-fields {
+    background-color: #fff;
+    border-color: #ccc;
+    color: #464646;
+}
+
+.m-layerswitcher-icons-image,
+.m-layerswitcher-icons-delete,
+.m-layerswitcher-icons-target,
+.m-layerswitcher-icons-info,
+.m-layerswitcher-icons-style,
+.m-layerswitcher-icons-zoom,
+.m-layerswitcher-icons-codsi,
+.m-layerswitcher-icons-lista,
+.m-layerswitcher-suggestion,
+.m-layerswitcher-icons-doc-text,
+.m-layerswitcher-icons-upload,
+.m-layerswitcher-icons-layer-group,
+.m-layerswitcher-suggestion-caret,
+#m-layerswitcher-addservices-selectall,
+#m-layerswitcher-addservices-selectall-wfs,
+.m-layerswitcher-icons-desplegar, .m-layerswitcher-icons-colapsar {
+    background-color: #ffffff;
+    color: #6c6c6c;
+}
+
+.m-layerswitcher-icons-image:hover,
+.m-layerswitcher-icons-delete:hover,
+.m-layerswitcher-icons-target:hover,
+.m-layerswitcher-icons-info:hover,
+.m-layerswitcher-icons-style:hover {
+    color: black;
+}
+
+.m-layerswitcher-icons-ocultar,
+.m-layerswitcher-icons-cancel {
+    color: red;
+}
+
+.m-layerswitcher-icons-ver {
+    color: #6abe47;
+}
+
+.m-layerswitcher-info-cap {
+    border-color: #cccccc;
+}
+
+.m-layerswitcher-ogc-fieldset-customquery,
+.m-layerswitcher-ogc-filter-custom-query {
+    border-color: #d3d3d3;
+}
+
+.m-layerswitcher-ogc-warning-msg {
+    background-color: #fff3cd;
+}
+
+.m-layerswitcher-outOfRange {
+    color: #9a9a9a;
+}
+
+.m-layerswitcher-outOfRange-input {
+    border-color: #9a9a9a !important;
+}
+
+.m-layerswitcher-outOfRange-input:checked {
+    background-color: #6abe47;
+}
+
+.m-layerswitcher-sectionPanel {
+    background-color: white;
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+.m-layerswitcher-title-box:hover,
+.m-layerswitcher-sectionPanel-header-text:hover,
+.m-layerswitcher-suggestion-group.active>li,
+span.m-layerswitcher-codsi-result::before {
+    color: #07274a;
+}
+
+.m-layerswitcher-tools {
+    border-top-color: #f1ecec;
+}
+
+.m-layerswitcher-visible-control > button {
+    border-color: rgba(0,0,0,.1) !important;
+}
+
+.m-layerswitcher-visible-control-button {
+    background-color: transparent;
+    border-color: rgba(0,0,0,.1) !important;
+}
+
+.m-panel.m-plugin-layerswitcher,
+div.m-areas div.m-area .m-panel.m-plugin-layerswitcher.opened {
+    background-color: transparent !important;
+}
+
+.m-panel.m-plugin-layerswitcher .m-panel-controls,
+ul.m-layerswitcher-ullayers {
+    background-color: #f9f9f9;
+}
+
+.m-panel.m-plugin-layerswitcher.collapsed button.m-panel-btn {
+    color: white !important;
+}
+
+.m-panel.m-plugin-layerswitcher.opened button.m-panel-btn {
+    background-color: #07274a !important;
+    color: white !important;
+}
+
+.search-form-date,
+.search-form-number {
+    border-color: #757474;
+    color: #6c6c6c;
+}
+
+.sortable-chosen {
+    color: #6c6c6c;
+}
+
+div.m-api-idee-container div.m-dialog div.m-title,
+div.m-dialog.info div.m-button > button {
+    background-color: #07274a;
+}
+
+li.m-layerswitcher-sectionPanel[data-layer-type="LayerGroup"]:has(> section div button.m-layerswitcher-icons-ocultar) > ul > li button.m-layerswitcher-icons-ver {
+    color: #9a9a9a !important;
+}
+
+li[data-layer-type="LayerGroup"]:not(:has(> section div input[type="radio"]:checked)) > ul > li input[type="radio"]:checked {
+    background-color: #9a9a9a !important;
+    border-color: #9a9a9a !important;
+}
+
+table#m-layerswitcher-table.m-layerswitcher-tablepagination tbody tr {
+    border-bottom-color: #dddddd;
+}
+
+table#m-layerswitcher-table.m-layerswitcher-tablepagination tbody tr:hover {
+    background-color: rgb(113 167 211 / 50%);
+}
+
+table#m-layerswitcher-table.m-layerswitcher-tablepagination tbody tr:nth-of-type(even) {
+    background-color: rgb(113 167 211 / 24%);
+}
+
+table#m-layerswitcher-table.m-layerswitcher-tablepagination thead tr {
+    background-color: #07274a;
+    color: white;
+}
+
+ul.m-layerswitcher-ullayers .m-layerswitcher-sectionPanel-colorPanel .m-layerswitcher-sectionPanel-colorPanel {
+    background-color: #e4f4ff;
+}
+
+ul.m-layerswitcher-ullayers .m-layerswitcher-sectionPanel-colorPanel .m-layerswitcher-sectionPanel-colorPanel .m-layerswitcher-sectionPanel-colorPanel {
+    background-color: #e2e2e291;
+}
+
+ul.m-layerswitcher-ullayers .m-layerswitcher-sectionPanel-colorPanel .m-layerswitcher-sectionPanel-colorPanel .m-layerswitcher-sectionPanel-colorPanel li {
+    background-color: #ffffff91;
+}
+
+ul.m-layerswitcher-ullayers .m-layerswitcher-sectionPanel-colorPanel .m-layerswitcher-sectionPanel-colorPanel li {
+    background-color: #f0f9ff;
+}
+
+ul.m-layerswitcher-ullayers .m-layerswitcher-sectionPanel-colorPanel button,
+ul.m-layerswitcher-ullayers .m-layerswitcher-sectionPanel-colorPanel li button,
+ul.m-layerswitcher-ullayers .m-layerswitcher-sectionPanel-colorPanel input,
+ul.m-layerswitcher-ullayers .m-layerswitcher-sectionPanel-colorPanel li input {
+    background-color: #f4f4f400;
+}
+
+ul.m-layerswitcher-ullayers .m-layerswitcher-sectionPanel-colorPanel li {
+    background-color: #ffffff;
+}
+
+/* FIN LAYERSWITCHER */
+
+/* VECTORSMANAGEMENT */
+#m-selectionlayer,
+#m-point-coordinates-srs,
+#figuresSelector {
+    background-color: #fff;
+    border-color: #ccc;
+    color: #6c6c6c;
+}
+
+#m-vectorsmanagement-download-btn:disabled {
+    background-color: #757474 !important;
+}
+
+#m-vectorsmanagement-titulo,
+#vectorsmanagement-point-profile-container .popup-title,
+#edition-attributes-container .popup-title,
+#clear-layer-modal .popup-title,
+.m-plugin-vectorsmanagement.opened #popup-box>div>div.popup-title {
+    background-color: #07274a;
+    color: white;
+}
+
+#options,
+.m-vectorsmanagement-previews>button,
+.m-vectorsmanagement-previews>div>button,
+.m-vectorsmanagement-selection-layer>button,
+#creationBtns>button,
+#analysisBtns>div>button,
+#editionBtns>button,
+[class^="vectorsmanagement-icon-"]:hover::before,
+.m-areas>div.m-area>div.m-panel.m-plugin-vectorsmanagement.opened .m-control.m-container.m-modal>button.m-panel-btn.vectorsmanagement-icon-cancelar {
+    color: #07274a;
+}
+
+.m-areas>div.m-area>div.m-panel.opened.m-plugin-vectorsmanagement {
+    background-color: transparent !important;
+}
+
+.m-control.m-container.m-vectorsmanagement {
+    background-color: #fff !important;
+}
+
+.m-panel.m-plugin-vectorsmanagement.opened .m-control.m-container.m-vectorsmanagement>div#m-vectorsmanagement-previews>div[id^="m-vectorsmanagement-"] {
+    background-color: #e9e8e8;
+    border-color: #e9e8e8;
+}
+
+.m-plugin-vectorsmanagement.opened #popup-box>div>a {
+    background-color: #b5b6b8;
+    color: white;
+}
+
+.m-plugin-vectorsmanagement.opened .m-panel-btn.g-cartografia-flecha-derecha,
+.m-plugin-vectorsmanagement.opened .m-panel-btn.g-cartografia-flecha-izquierda {
+    background-color: white !important;
+    color: #07274a !important;
+}
+
+.m-vectorsmanagement-analysis-featureInfo table,
+.m-vectorsmanagement-analysis-featureInfo table th,
+.m-vectorsmanagement-analysis-featureInfo table td {
+    border-color: black;
+}
+
+.m-vectorsmanagement-controls,
+#m-vectorsmanagement-download-format,
+.m-control.m-container.m-modal>button.m-panel-btn.vectorsmanagement-icon-cancelar,
+#edition-attributes-container,
+#clear-layer-modal,
+#vectorsmanagement-point-profile-container,
+div.m-areas>div.m-area>div.m-plugin-vectorsmanagement.opened .m-control.m-container.m-modal,
+.m-areas>div.m-area>div.m-panel.m-plugin-vectorsmanagement.opened div#popup-box {
+    background-color: #fff;
+}
+
+.m-vectorsmanagement-creation-container,
+#m-point-coordinates,
+#m-text-draw,
+.m-vectorsmanagement-style-container,
+.m-container.m-selection.m-selection-container,
+.m-vectorsmanagement-analysis,
+#m-vectorsmanagement-download-container,
+.m-vectorsmanagement-edition-container,
+#edition-container,
+#m-vectorsmanagement-previews,
+#m-figuretools,
+#edition-attributes-container {
+    border-top-color: #757474;
+}
+
+.m-vectorsmanagement-previews>button,
+.m-vectorsmanagement-previews>div>button,
+.m-vectorsmanagement-selection-layer>button,
+#creationBtns>button,
+#analysisBtns>div>button,
+#editionBtns>button,
+[class^="vectorsmanagement-icon-"]:before {
+    background-color: #fff;
+    color: #757474;
+}
+
+.m-vectorsmanagement-previews>button.activated,
+.m-vectorsmanagement-previews>div>button.activated,
+.m-vectorsmanagement-selection-layer>button.activated,
+#creationBtns>button.activated,
+#analysisBtns>div>button.activated,
+#editionBtns>button.activated,
+[class^="vectorsmanagement-icon-"].activated:before,
+#vectorsmanagement-point-profile-container>button.m-panel-btn.vectorsmanagement-icon-cancelar,
+#edition-attributes-container>button.m-panel-btn.vectorsmanagement-icon-cancelar {
+    background-color: #07274a;
+    color: #fff;
+}
+
+.m-vectorsmanagement-styleOptions>div {
+    border-color: #07274a44;
+}
+
+.m-vectorsmanagement-toolsContent {
+    border-left-color: #757474;
+}
+
+.ol-control-vector.ol-profil .ol-inner {
+    background-color: hsl(0deg 0% 100%);
+}
+
+.ol-profil .ol-profilbar,
+.ol-profil .ol-profilcursor:before {
+    background: red;
+}
+
+.ol-profil button.profile-close-button {
+    background-color: transparent;
+    color: #c40000;
+}
+
+.ol-profil button.profile-download-button,
+.ol-profil button.profile-move-button {
+    background-color: transparent;
+    color: #000000;
+}
+
+.ol-profil p {
+    background-color: hsl(0deg 0% 100%);
+    color: #0f0f0f;
+}
+
+.ol-profil table {
+    color: black;
+}
+
+.ol-profil table .track-info {
+    background-color: hsla(0, 0%, 100%, .7);
+}
+
+.ol-profil table span {
+    background-color: #ffffffb5;
+}
+
+.ol-profilpopup {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.vectorsmanagement-geojson:hover:before {
+    color: #07274a !important;
+}
+
+button#m-vectormanagement-coordinates-draw,
+button#m-vectorsmanagement-download-btn,
+button#m-vectorsmanagement-deletegeom-btn,
+button#add-attribute-btn,
+button#vectorsmanagement-analysis-btn,
+button#confirm-clear-btn,
+button#cancel-clear-btn,
+button#set-style-btn {
+    background-color: #07274a !important;
+    color: #fff !important;
+}
+
+div#popup-box>div.popup-section>div>span[class^="vectorsmanagement-icon-"]:before {
+    background-color: transparent;
+    color: #fff;
+}
+
+div.m-areas>div.m-area>div.m-panel-modal.opened {
+    background-color: white;
+    border-color: #d3d3d3;
+}
+
+table#attribute-table>tr>td {
+    border-color: #07274a;
+}
+
+table#attribute-table>tr>th {
+    background-color: #9dc6e8;
+    border-color: #07274a;
+    color: #fff;
+}
+
+table#attribute-table>tr>th>button,
+table#attribute-table>tr>th>button[class^="vectorsmanagement-icon-"]:before {
+    background-color: transparent;
+    color: rgb(44 68 88);
+}
+
+/* FIN VECTORSMANAGEMENT */
+
+/* BACKIMGLAYER */
+.m-areas>div.m-area>div.m-panel.opened.m-plugin-backimglayer {
+    background-color: transparent !important;
+}
+
+.m-backimglayer .activeBackimglayerDiv {
+    border-color: #306c9f !important;
+}
+
+.m-panel.m-plugin-backimglayer.opened .m-control.m-container.m-backimglayer>div#m-backimglayer-previews>#m-backimglayer-lyr-empty {
+    background-color: white !important;
+}
+
+.m-panel.m-plugin-backimglayer.opened .m-control.m-container.m-backimglayer>div#m-backimglayer-previews>div[id^="m-backimglayer-lyr-"] {
+    background-color: #e9e8e8;
+    border-color: #e9e8e8;
+}
+
+.m-plugin-backimglayer.opened .m-panel-btn.g-cartografia-flecha-derecha,
+.m-plugin-backimglayer.opened .m-panel-btn.g-cartografia-flecha-izquierda {
+    background-color: white !important;
+    color: #07274a !important;
+}
+
+div#m-backimglayer-titulo {
+    background-color: #07274a;
+    color: white;
+}
+
+div[id^="m-backimglayer-lyr-"]>span {
+    background-color: white;
+    color: rgb(73, 73, 73);
+}
+
+/* FIN BACKIMGLAYER */
+
+/* MEASUREBAR */
+.m-areas>div.m-area>div.m-panel.m-panel-measurebar.opened>button.m-panel-btn.g-cartografia-flecha-izquierda {
+    color: white !important;
+}
+
+.m-areas>div.m-area>div.m-panel.m-panel-measurebar.opened>div.m-panel-controls>div.m-control.activated>button {
+    color: #07274a !important;
+}
+
+.m-areas>div.m-area>div.m-panel.m-panel-measurebar.opened>div.m-panel-controls>div.m-control>button[class^="measurebar-"],
+.m-areas>div.m-area>div.m-panel.m-panel-measurebar.opened>div.m-panel-controls>div.m-control>button#measurebar-clear-btn {
+    background-color: white;
+    color: grey !important;
+}
+
+.m-measure-tooltip.measure {
+    background: #b54d01;
+    color: white;
+}
+
+.m-measure-tooltip.measure:before,
+.m-measure-tooltip.static:before {
+    border-left-color: transparent;
+    border-right-color: transparent;
+    border-top-color: #b54d01;
+}
+
+.m-measure-tooltip.static {
+    background-color: #337ceb;
+    border-color: white;
+    color: #fff;
+}
+
+.m-measure-tooltip.static:before {
+    border-top-color: #337ceb;
+}
+
+div.m-panel.m-panel-measurebar.opened>button.m-panel-btn {
+    background-color: #07274a !important;
+    color: white;
+}
+
+/* FIN MEASUREBAR */
+
+/* INFOCOORDINATES */
+#m-infocoordinates-buttonRemovePoint,
+#m-infocoordinates-copylatlon,
+#m-infocoordinates-copyxy,
+#m-infocoordinates-buttonRemoveAllPoints,
+#m-infocoordinates-buttonImportAllPoints,
+#m-infocoordinates-buttonCopyAllPoints,
+#m-infocoordinates-buttonDisplayAllPoints {
+    background-color: transparent;
+    color: gray;
+}
+
+#m-infocoordinates-buttonRemovePoint:hover,
+#m-infocoordinates-copylatlon:hover,
+#m-infocoordinates-copyxy:hover,
+#m-infocoordinates-buttonRemoveAllPoints:hover,
+#m-infocoordinates-buttonImportAllPoints:hover,
+#m-infocoordinates-buttonCopyAllPoints:hover,
+#m-infocoordinates-buttonDisplayAllPoints:hover {
+    color: rgb(91, 91, 91);
+}
+
+.contenedorPunto {
+    -webkit-text-stroke-color: #2690e7;
+    color: white;
+}
+
+.contenedorPuntoSelect {
+    -webkit-text-stroke-color: black;
+    color: white;
+}
+
+.m-infocoordinates-comboDatum .m-infocoordinates-input-select {
+    background-color: #fff;
+    color: black;
+}
+
+.m-infocoordinates-comboDatum .m-infocoordinates-srs-selector {
+    background-color: white;
+    border-color: #ddd;
+    color: #000;
+}
+
+.m-infocoordinates-comboDatum .m-infocoordinates-srs-selector li {
+    border-bottom-color: #ddd;
+}
+
+.m-infocoordinates-comboDatum .m-infocoordinates-srs-selector li a {
+    color: #6c6c6c;
+}
+
+.m-infocoordinates-comboDatum .m-infocoordinates-srs-selector li:hover {
+    border-color: #000;
+    color: #000;
+}
+
+.m-infocoordinates-div-buttonRemoveAllPoints,
+.m-infocoordinates-div-buttonImportAllPoints,
+.m-infocoordinates-div-buttonCopyAllPoints,
+.m-infocoordinates-div-buttonDisplayAllPoints {
+    border-top-color: rgb(228, 226, 226);
+}
+
+.m-infocoordinates-tabs {
+    background-color: #f1f1f1;
+}
+
+.m-infocoordinates-tabs button {
+    background-color: inherit;
+}
+
+.m-infocoordinates-tabs button.active {
+    background-color: #ccc;
+}
+
+.m-infocoordinates-tabs button:hover {
+    background-color: #ddd;
+}
+
+.m-infocoordinates-title {
+    background-color: #07274a;
+}
+
+.m-infocoordinates-title>p {
+    color: white;
+}
+
+.m-panel.m-plugin-infocoordinates.opened>button {
+    background-color: white !important;
+    color: #07274a !important;
+}
+
+.m-plugin-infocoordinates .icon-target:before {
+    -webkit-text-stroke-color: #07274a;
+    text-stroke-color: #07274a;
+}
+
+.m-plugin-infocoordinates .m-infocoordinates-help a {
+    color: #07274a !important;
+}
+
+/* FIN INFOCOORDINATES */
+
+/* LOCATOR */
+#div-contenedor-locator input::placeholder,
+#div-contenedor-locator input:-ms-input-placeholder,
+#div-contenedor-locator input::-ms-input-placeholder {
+    color: #d1d0d0;
+}
+
+#div-contenedor-locator>#m-ignsearch-panel>#m-ignsearchlocator-results,
+#m-ignsearchlocator-locate-button {
+    background-color: #fffbfb;
+}
+
+#div-contenedor-locator>#m-ignsearch-panel>#m-ignsearchlocator-results>#m-ignsearchlocator-results-list li {
+    color: black;
+}
+
+#div-contenedor-locator>#m-infocatastro-panel>.m-search-tabs .m-search-tab-panels,
+#div-contenedor-locator>#m-infocatastro-panel>.m-search-tabs>label {
+    border-color: #ccc;
+}
+
+#div-contenedor-locator>#m-infocatastro-panel>.m-search-tabs>label::after {
+    background: #8d8d8d;
+}
+
+#div-contenedor-locator>#m-infocatastro-panel>.m-search-tabs>label:hover,
+#div-contenedor-locator>#m-infocatastro-panel>.m-search-tabs>label:focus,
+#div-contenedor-locator>#m-infocatastro-panel>.m-search-tabs>label[aria-selected=true] {
+    color: #07274a;
+}
+
+#div-contenedor-locator>#m-infocatastro-panel>.m-search-tabs>label:hover::after,
+#div-contenedor-locator>#m-infocatastro-panel>.m-search-tabs>label:focus::after,
+#div-contenedor-locator>#m-infocatastro-panel>.m-search-tabs>label[aria-selected=true]::after {
+    background: #07274a;
+}
+
+#div-contenedor-locator>#m-infocatastro-panel>.m-search-tabs>label[aria-selected=true] {
+    border-bottom-color: #fff;
+    border-color: #ccc;
+}
+
+#div-contenedor-locator>#m-xylocator-panel>.m-xylocator-datas>div.button>button {
+    background-color: #fff;
+    border-color: rgba(0, 0, 0, .4);
+    color: black;
+}
+
+#div-contenedor-locator>#m-xylocator-panel>.m-xylocator-datas>div>input,
+#div-contenedor-locator>#m-infocatastro-panel input#m-searchParamsPoligono-input,
+#div-contenedor-locator>#m-infocatastro-panel input#m-searchParamsParcela-input,
+#div-contenedor-locator>#m-infocatastro-panel input#m-refCatastral-input,
+#div-contenedor-locator>#m-ignsearch-panel>#m-ignsearchlocator-search-input {
+    background-color: #fdfdfd;
+}
+
+#div-contenedor-locator>#m-xylocator-panel>.m-xylocator-datas>div>select {
+    background-color: #e9e8e8 !important;
+}
+
+#div-contenedor-locator>#m-xylocator-panel>.m-xylocator-datas>div>select,
+    #div-contenedor-locator>#m-infocatastro-panel .m-infocatastro-datas>div select,
+#div-contenedor-locator>#m-xylocator-panel>.m-xylocator-datas>div>select,
+    #div-contenedor-locator>#m-infocatastro-panel .m-infocatastro-datas>div>select {
+    border-color: rgb(167, 160, 160);
+}
+
+#m-locator-xylocator.locator-icon-posicion3.activated,
+#m-locator-infocatastro.locator-icon-catastro.activated,
+#m-locator-ignsearch.locator-icon-ignsearch.activated,
+#div-contenedor-locator>#m-xylocator-panel>.m-xylocator-datas>#m-xylocator-coordinatesSystem>div>.m-xylocator-help-button>a {
+    color: #07274a !important;
+}
+
+#m-xylocator-panel,
+#m-infocatastro-panel,
+#m-ignsearch-panel {
+    background-color: #fffbfb;
+    border-top-color: #adadad;
+}
+
+.m-areas>div.m-area>div.m-panel.opened.m-plugin-locator {
+    background-color: transparent !important;
+}
+
+.m-locator .activelocatorDiv {
+    border-color: #92c1e7 !important;
+}
+
+.m-plugin-locator.opened .m-panel-btn.g-cartografia-flecha-derecha,
+.m-plugin-locator.opened .m-panel-btn.g-cartografia-flecha-izquierda {
+    background-color: white !important;
+    color: #07274a !important;
+}
+
+button#m-ignsearchlocator-locate-button,
+#div-contenedor-locator>#m-ignsearch-panel>#m-ignsearchlocator-results>#m-ignsearchlocator-results-list li+span {
+    color: #7A7A73;
+}
+
+div#m-locator-previews,
+.m-bottom .m-control.m-container.m-locator>#m-locator-previews {
+    background-color: white;
+}
+
+div#m-locator-title,
+#div-contenedor-locator>#m-xylocator-panel>div.m-xylocator-datas>.button>#m-xylocator-loc,
+#div-contenedor-locator>#m-xylocator-panel>div.m-xylocator-datas>.button>#m-xylocator-limpiar,
+#div-contenedor-locator>#m-infocatastro-panel .button>#m-infocatastro-searchParams,
+#div-contenedor-locator>#m-infocatastro-panel .button>#m-infocatastro-parcela-limpiar,
+#div-contenedor-locator>#m-infocatastro-panel #m-infocatastro-refCatastral,
+#div-contenedor-locator>#m-infocatastro-panel .button>#m-infocatastro-consulRef,
+#div-contenedor-locator>#m-infocatastro-panel .button>#m-infocatastro-catastro-limpiar,
+#div-contenedor-locator>#m-ignsearch-panel>#m-ignsearchlocator-clean-button,
+#div-contenedor-locator>#m-ignsearch-panel>#m-ignsearchlocator-results>#m-ignsearchlocator-results-list li:hover {
+    background-color: #07274a;
+    color: white;
+}
+
+/* FIN LOCATOR */
+
+/* HELP */
+.m-control.m-container.m-help-container button {
+    background-color: #07274a !important;
+    border-color: white;
+    color: white;
+}
+
+/* FIN HELP */
+
+/* ATTRIBUTIONS */
+.attributionElements:nth-child(even) {
+    background-color: #07274a1f;
+}
+
+.m-attributions,
+.m-areas>div.m-area>div.m-panel.opened.m-attributions {
+    background-color: rgba(0, 0, 0, 0) !important;
+}
+
+.m-attributions {
+    color: #000 !important;
+}
+
+.m-attributions .m-panel-btn.g-cartografia-flecha-derecha,
+.m-attributions .m-panel-btn.g-cartografia-flecha-izquierda {
+    background-color: #07274a !important;
+    color: white !important;
+}
+
+.m-attributions a,
+.m-attributions p {
+    color: #000;
+}
+
+.m-attributions header {
+    background-color: #07274a;
+}
+
+.m-attributions header h1 {
+    color: #fff;
+}
+
+.m-attributions.opened .m-panel-btn.g-cartografia-flecha-derecha,
+.m-attributions.opened .m-panel-btn.g-cartografia-flecha-izquierda {
+    background-color: white !important;
+    color: #07274a !important;
+}
+
+.m-container.m-attributions {
+    background-color: #fff !important;
+    color: #000 !important;
+}
+
+/* FIN ATTRIBUTIONS */
+
+/* SCALE */
+.m-scale-container {
+    background-color: rgba(0, 60, 136, .5);
+    border-color: white;
+}
+
+.m-scale-container>.m-unit:before {
+    color: #a35d38;
+}
+
+/* FIN SCALE */
+
+/* RASTERMANAGEMENT */
+#m-rastermanagement-apply,
+#m-rastermanagement-clear,
+#m-rastermanagement-copy {
+    color: #404040 !important;
+}
+
+.m-areas>div.m-area.m-left>div.m-plugin-rastermanagement.opened>button.m-panel-btn,
+.m-areas>div.m-area.m-right>div.m-plugin-rastermanagement.opened>button.m-panel-btn,
+.m-rastermanagement-filter-control>input[type='range']::-webkit-slider-thumb,
+.m-rastermanagement-filter-control>input[type='range']::-moz-range-progress,
+.m-rastermanagement-filter-control>input[type='range']::-moz-range-thumb {
+    background-color: #07274a;
+}
+
+.m-areas>div.m-area>div.m-plugin-rastermanagement.collapsed>button.m-panel-btn {
+    background-color: #07274a !important;
+}
+
+.m-areas>div.m-area>div.m-plugin-rastermanagement.opened>button.m-panel-btn {
+    background-color: white !important;
+    color: #07274a !important;
+}
+
+.m-control.m-container.m-rastermanagement>div.title {
+    background-color: #07274a;
+    border-bottom-color: rgba(0, 0, 0, 0.08);
+    color: #fff !important;
+}
+
+.m-rastermanagement-band-remove:not(:disabled):hover,
+.m-rastermanagement-ramp-action:hover,
+.m-rastermanagement-ramp-remove:not(:disabled):hover {
+    background-color: #5a93c2;
+    border-color: #5a93c2;
+}
+
+.m-rastermanagement-filter-control>input[type='range'] {
+    background: transparent;
+}
+
+.m-rastermanagement-filter-control>input[type='range']::-moz-range-track {
+    background-color: #d0d0d0;
+}
+
+.m-rastermanagement-filter-control>input[type='range']::-webkit-slider-runnable-track {
+    background: linear-gradient(to right,
+            #07274a 0%,
+            #07274a var(--range-progress),
+            #d0d0d0 var(--range-progress),
+            #d0d0d0 100%);
+}
+
+.m-rastermanagement-filters {
+    border-top-color: rgb(113 167 211);
+    color: #404040;
+}
+
+.m-rastermanagement-histogram-band-select {
+    background-color: #fff;
+}
+
+.m-rastermanagement-histogram-calculate:hover {
+    background-color: #5a8fb5;
+    border-color: #5a8fb5;
+}
+
+.m-rastermanagement-histogram-cancel:hover {
+    background-color: #f3f8fc;
+    border-color: #07274a;
+}
+
+.m-rastermanagement-histogram-distance-row input {
+    border-color: #ccc;
+}
+
+.m-rastermanagement-histogram-error {
+    color: #c0392b;
+}
+
+.m-rastermanagement-histogram-mode,
+.m-rastermanagement-histogram-clear-geom,
+.m-rastermanagement-histogram-cancel {
+    background-color: #fff;
+    border-color: #b8d4ea;
+    color: #3d7aa6;
+}
+
+.m-rastermanagement-index,
+.m-rastermanagement-fit-minmax {
+    background-color: #f5f5f5;
+    border-color: #ccc;
+    color: #404040;
+}
+
+.m-rastermanagement-index-form input.m-rastermanagement-ramp-value[type='number']:focus {
+    border-color: #07274a;
+}
+
+.m-rastermanagement-index.active,
+.m-rastermanagement-band-remove,
+.m-rastermanagement-ramp-action,
+.m-rastermanagement-ramp-remove,
+.m-rastermanagement-histogram-mode.active,
+.m-rastermanagement-histogram-calculate {
+    background-color: #07274a;
+    border-color: #07274a;
+    color: #fff;
+}
+
+.m-rastermanagement-index:hover,
+.m-rastermanagement-fit-minmax:hover {
+    border-color: #07274a;
+    color: #07274a;
+}
+
+.m-rastermanagement-layer-select-btn,
+.m-rastermanagement-index-form select,
+.m-rastermanagement-index-form input[type='number'],
+.m-rastermanagement-index-form input.m-rastermanagement-ramp-value[type='number'],
+.m-rastermanagement-filter-control>input[type='number'] {
+    background-color: #fff;
+    border-color: #ccc;
+    color: #404040;
+}
+
+.m-rastermanagement-layer-select-btn::after {
+    border-left-color: transparent;
+    border-right-color: transparent;
+    border-top-color: #666;
+}
+
+.m-rastermanagement-layer-select-list {
+    background-color: #fff;
+    border-color: #ccc;
+}
+
+.m-rastermanagement-layer-select-list > li,
+.m-rastermanagement-tab-content,
+.m-rastermanagement-index-form label,
+.m-rastermanagement-filter-header>label {
+    color: #404040;
+}
+
+.m-rastermanagement-layer-select-list > li:hover,
+.m-rastermanagement-layer-select-list > li.is-selected {
+    background-color: #07274a;
+    color: #fff;
+}
+
+.m-rastermanagement-layer-selector,
+#m-rastermanagement-sections {
+    border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+.m-rastermanagement-layer-selector>button {
+    background-color: #07274a;
+    border-color: #5a93c2;
+    color: #fff;
+}
+
+.m-rastermanagement-layer-selector>button:active {
+    background-color: #4a7fa8;
+}
+
+.m-rastermanagement-layer-selector>button:hover {
+    background-color: #5a93c2;
+    border-color: #4a7fa8;
+}
+
+.m-rastermanagement-ramp-color {
+    background: transparent;
+    border-color: #ccc;
+}
+
+.m-rastermanagement-rgb-hint {
+    color: #666;
+}
+
+.m-rastermanagement-section-tab {
+    background-color: #ececec;
+    border-bottom-color: transparent;
+    color: #404040;
+}
+
+.m-rastermanagement-section-title,
+.m-rastermanagement-filter-value,
+.m-rastermanagement-histogram-point-value-label,
+.m-rastermanagement-histogram-stats-title,
+.m-rastermanagement-histogram-stat-label {
+    color: #07274a;
+}
+
+.m-rastermanagement-tab {
+    background-color: #f5f5f5;
+    border-bottom-color: transparent;
+    color: #404040;
+}
+
+.m-rastermanagement-tab.active,
+.m-rastermanagement-section-tab.active {
+    background-color: #fff;
+    border-bottom-color: #07274a;
+    color: #07274a;
+}
+
+/* FIN RASTERMANAGEMENT */
+
+/* MOUSE */
+.m-control.m-container.m-mousesrs-container {
+    background-color: #07274a !important;
+    border-color: white;
+    color: white;
+}
+
+.m-mouse-position:before {
+    color: #a35d38;
+}
+
+.m-mousesrs-srs-container .m-mousesrs-help-button a {
+    color: #07274a !important;
+}
+
+.m-mousesrs-srs-container .m-mousesrs-input-select {
+    background-color: #fff;
+    color: black !important;
+}
+
+.m-mousesrs-srs-container .m-mousesrs-srs-selector {
+    background-color: white;
+    border-color: #ddd;
+    color: #000;
+}
+
+.m-mousesrs-srs-container .m-mousesrs-srs-selector li {
+    border-bottom-color: #ddd;
+}
+
+.m-mousesrs-srs-container .m-mousesrs-srs-selector li a {
+    color: #6c6c6c;
+}
+
+.m-mousesrs-srs-container .m-mousesrs-srs-selector li:hover {
+    border-color: #000;
+    color: #000;
+}
+
+/* FIN MOUSE */
+
+/* VIEWMANAGEMENT */
+.m-plugin-viewmanagement.opened .m-panel-btn.g-cartografia-flecha-derecha,
+.m-plugin-viewmanagement.opened .m-panel-btn.g-cartografia-flecha-izquierda {
+    background-color: white !important;
+    color: #07274a !important;
+}
+
+div#m-viewmanagement-title {
+    background-color: #07274a;
+    color: white;
+}
+
+div#m-viewmanagement-previews,
+.m-bottom .m-control.m-container.m-viewmanagement>#m-viewmanagement-previews {
+    background-color: white;
+}
+
+.m-predefinedzoom-button-container {
+    border-color: #adadad;
+    background-color: #F7F6F6;
+}
+
+.viewmanagement-icon-flecha-historial.activated,
+.viewmanagement-icon-zoompanel.activated,
+.viewmanagement-icon-expand.activated:before,
+.viewmanagement-icon-zoom-extension.activated,
+.viewmanagement-icon-home.activated,
+.viewmanagement-icon-flecha-izquierda3.activated:before,
+.viewmanagement-icon-flecha-derecha3.activated:before,
+.viewmanagement-icon-zoom-in.activated:before,
+.viewmanagement-icon-zoom-out.activated:before {
+    color: #07274a !important;
+}
+
+#m-viewhistory-panel,
+#m-zoompanel-panel,
+#m-predefinedzoom-panel {
+    background-color: #ededed;
+    border-top-color: #adadad;
+}
+
+#m-historyprevious-button,
+#m-historynext-button,
+#m-zoompanel-zoomin,
+#m-zoompanel-zoomout,
+#m-predefinedzoom-panel .viewmanagement-icon-expand {
+    background-color: transparent;
+}
+
+.m-viewmanagement .activeviewmanagementDiv {
+    border-color: #92c1e7 !important;
+}
+
+.m-areas>div.m-area>div.m-panel.opened.m-plugin-viewmanagement {
+    background-color: transparent !important;
+}
+
+.viewmanagement-icon-zoom-in:before,
+.viewmanagement-icon-zoom-out:before,
+.viewmanagement-icon-expand:before,
+.viewmanagement-icon-flecha-derecha3:before,
+.viewmanagement-icon-flecha-izquierda3:before {
+    color: #646464;
+}
+/* FIN VIEWMANAGEMENT */
+
+.m-areas > div.m-area > div.m-panel, .m-areas > div.m-area > div.m-panel.collapsed > button.m-panel-btn, .m-areas > div.m-area > div.m-panel.m-edition > button.m-panel-btn, .m-areas > div.m-area > div.m-panel.m-geosearch > button.m-panel-btn, .m-areas > div.m-area > div.m-panel.m-layerswitcher > button.m-panel-btn, .m-areas > div.m-area > div.m-panel.m-printer > button.m-panel-btn, .m-areas > div.m-area > div.m-panel.m-searchstreet > button.m-panel-btn, .m-areas > div.m-area > div.m-panel.m-searchstreetgeosearch > button.m-panel-btn, .m-areas > div.m-area > div.m-panel.m-tools > button.m-panel-btn, .m-areas > div.m-area > div.m-panel > div.m-panel-controls .m-mouse-position, .m-scale-container, .m-wmcselector-container, .ol-overviewmap.ol-collapsed, .ol-zoom > button, .ol-zoomslider > button.ol-zoomslider-thumb {
+    background-color: #07274a !important;
+}
