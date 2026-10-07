@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import i18n from '@/app/languages/i18n';
+import i18next from '@/app/languages/i18n';
 
 import CircleSpinner from '@/components/Helpers/Spinner';
 import Layout from '@/components/Layout/Layout';
@@ -22,12 +22,12 @@ export default function Viewer() {
             setBlocking(false);
         };
 
-        if (i18n.isInitialized) {
+        if (i18next.isInitialized) {
             handleInit();
         } else {
-            i18n.on('initialized', handleInit);
+            i18next.on('initialized', handleInit);
             return () => {
-                i18n.off('initialized', handleInit); // cleanup to avoid memory leak
+                i18next.off('initialized', handleInit); // cleanup to avoid memory leak
             };
         }
     }, [blocking, hasMounted]);

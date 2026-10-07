@@ -33,13 +33,24 @@ RUN \
 FROM base AS builder
 
 ARG NEXT_PUBLIC_API_IDEE_URL \
-    NEXT_PUBLIC_API_IDEE_PLUGINS_URL
-
-ENV http_proxy=http://192.168.192.11:8080 \
+    NEXT_PUBLIC_API_IDEE_PLUGINS_URL \
+	NEXT_PUBLIC_GNEIS_PORTAL_URL \
+    NEXT_PUBLIC_API_IDEE_PLUGINS_URL \
+    NEXT_PUBLIC_GNEIS_STAC_URL \
+	NEXT_PUBLIC_GNEIS_DOWNLOAD_URL \
+	NEXT_PUBLIC_ASSET_VERSION \
+    PAGE_TITLE
+    
+    ENV http_proxy=http://192.168.192.11:8080 \
     https_proxy=http://192.168.192.11:8080 \
     no_proxy=127.0.0.1,localhost,10.0.0.0/8,192.0.0.0/8 \
     NEXT_PUBLIC_API_IDEE_URL=${NEXT_PUBLIC_API_IDEE_URL} \
     NEXT_PUBLIC_API_IDEE_PLUGINS_URL=${NEXT_PUBLIC_API_IDEE_PLUGINS_URL} \
+    NEXT_PUBLIC_GNEIS_PORTAL_URL=${NEXT_PUBLIC_GNEIS_PORTAL_URL} \
+    NEXT_PUBLIC_GNEIS_STAC_URL=${NEXT_PUBLIC_GNEIS_STAC_URL} \
+	NEXT_PUBLIC_GNEIS_DOWNLOAD_URL=${NEXT_PUBLIC_GNEIS_DOWNLOAD_URL} \
+	NEXT_PUBLIC_ASSET_VERSION=${NEXT_PUBLIC_ASSET_VERSION} \
+	PAGE_TITLE=${PAGE_TITLE} \
     NEXT_TELEMETRY_DISABLED=1
 
 WORKDIR /viewer
@@ -64,7 +75,7 @@ ENV http_proxy=http://192.168.192.11:8080 \
     no_proxy=127.0.0.1,localhost,10.0.0.0/8,192.0.0.0/8
 
 # Install nginx, Node.js, npm, docker-cli, ssh, sshpass and AWS CLI
-RUN apk add --no-cache nginx nodejs npm docker-cli openssh sshpass aws-cli
+RUN apk add --no-cache nginx nodejs npm docker-cli docker-cli-buildx openssh sshpass aws-cli
 
 # Crear usuario jenkins con UID 1002 (para que coincida con Jenkins)
 RUN addgroup -g 990 docker && adduser -D -u 9001 -G docker jenkins

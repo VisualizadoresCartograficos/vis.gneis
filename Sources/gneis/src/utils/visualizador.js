@@ -1,222 +1,62 @@
-import i18next from 'i18next';
-import i18n from '@/app/languages/i18n';
-// IMPORTANT! TO USE TRANSLATIONS, WE SET THEM LIKE: i18n.t('viewer.whatever');
+import i18next from '@/app/languages/i18n';
+import { installParentAuthOnCatalog, requestParentAuth } from './parentAuth';
 
-import Utils from './Utils';
-import {
-	installParentAuthOnCatalog,
-	requestParentAuth,
-} from './parentAuth';
-import { applyViewerLanguage, resolveViewerLanguage } from './locale';
+import MAPA from '@/static/img/mapa.png';
+import IMAGEN from '@/static/img/image.png';
+import RASTER from '@/static/img/raster.png';
+import HIBRIDO from '@/static/img/hibrido.png';
+import HISTORICOS from '@/static/img/historicos.png';
+import LIDAR from '@/static/img/lidar.png';
+import OCUPACION from '@/static/img/ocupacion_suelo.png';
+import CIUDADANO from '@/static/img/ciudadano.png';
 
-import MAPA from 'static/img/mapa.png';
-import IMAGEN from 'static/img/image.png';
-import RASTER from 'static/img/raster.png';
-import HIBRIDO from 'static/img/hibrido.png';
-import HISTORICOS from 'static/img/historicos.png';
-import LIDAR from 'static/img/lidar.png';
-import OCUPACION from 'static/img/ocupacion_suelo.png';
-import CIUDADANO from 'static/img/ciudadano.png';
-
-const MAPA_SRC = MAPA.src;
-const IMAGEN_SRC = IMAGEN.src;
-const RASTER_SRC = RASTER.src;
-const HIBRIDO_SRC = HIBRIDO.src;
-const HISTORICOS_SRC = HISTORICOS.src;
-const LIDAR_SRC = LIDAR.src;
-const OCUPACION_SRC = OCUPACION.src;
-const CIUDADANO_SRC = CIUDADANO.src;
 
 const INITIAL_CENTER = [-428106.86611520057, 4334472.25393817];
 const PROJECTION = 'EPSG:3857';
-
-export let mapjs;
-
-const transformCoordinates = (coordinates, fromProjection, toProjection) => {
-	if (window.ol?.proj?.transform) {
-		return window.ol.proj.transform(coordinates, fromProjection, toProjection);
-	}
-	return coordinates;
-};
-
-const disableTerrainForOpenLayers = () => {
-	if (window.IDEE?.config) {
-		window.IDEE.config('terrain', { default: '' });
-	}
-};
+const portalUrl = process.env.NEXT_PUBLIC_GNEIS_PORTAL_URL;
+const stacUrl = process.env.NEXT_PUBLIC_GNEIS_STAC_URL;
 
 const MAP_CONTAINER_ID = 'map';
 
-const getMapContainer = () => document.getElementById(MAP_CONTAINER_ID);
+export let mapjs;
 
-const hasMapContainerArea = (el = getMapContainer()) =>
-	Boolean(el && el.clientWidth > 0 && el.clientHeight > 0);
-
-/**
- * Espera a que #map tenga área real (evita updateSize/render de OL con 0x0,
- * típico al embeber en iframe de Liferay).
- */
-const waitForMapContainerLayout = (timeoutMs = 5000) =>
-	new Promise((resolve) => {
-		const el = getMapContainer();
-
-		if (hasMapContainerArea(el)) {
-			requestAnimationFrame(() => {
-				requestAnimationFrame(resolve);
-			});
-			return;
-		}
-
-		let settled = false;
-		let observer = null;
-		let timeoutId = 0;
-
-		const finish = () => {
-			if (settled) {
-				return;
-			}
-
-			settled = true;
-			window.clearTimeout(timeoutId);
-			window.removeEventListener('resize', onResize);
-
-			if (observer) {
-				observer.disconnect();
-			}
-
-			resolve();
-		};
-
-		const tryReady = () => {
-			if (hasMapContainerArea()) {
-				requestAnimationFrame(() => {
-					requestAnimationFrame(finish);
-				});
-			}
-		};
-
-		const onResize = () => {
-			tryReady();
-		};
-
-		if (typeof ResizeObserver !== 'undefined' && el) {
-			observer = new ResizeObserver(tryReady);
-			observer.observe(el);
-
-			if (el.parentElement) {
-				observer.observe(el.parentElement);
-			}
-		}
-
-		window.addEventListener('resize', onResize);
-		timeoutId = window.setTimeout(finish, timeoutMs);
-		tryReady();
-	});
-
-const safeUpdateMapSize = (mapImpl) => {
-	if (!mapImpl?.updateSize || !hasMapContainerArea()) {
-		return false;
-	}
-
-	try {
-		mapImpl.updateSize();
-		return true;
-	}
-	catch (err) {
-		console.warn('[Visor:initMap] updateSize falló', err);
-		return false;
-	}
-};
-
-/**
- * Sincroniza el tamaño del mapa cuando el contenedor gana área (iframe / layout).
- */
-const scheduleMapSizeSync = (mapImpl) => {
-	if (!mapImpl?.updateSize) {
-		return;
-	}
-
-	const run = () => {
-		safeUpdateMapSize(mapImpl);
-	};
-
-	run();
-	requestAnimationFrame(run);
-
-	const el = getMapContainer();
-
-	if (typeof ResizeObserver !== 'undefined' && el) {
-		const observer = new ResizeObserver(run);
-
-		observer.observe(el);
-
-		if (el.parentElement) {
-			observer.observe(el.parentElement);
-		}
-	}
-
-	window.addEventListener('resize', run);
-};
-export const initMap = async (block, unblock, sessionAuth) => {
+export const initMap = async (block, unblock, setMapStarted, sessionAuth) => {
 	block();
-	applyViewerLanguage(resolveViewerLanguage());
-
-	let zoom = IDEE.config.MAP_VIEWER_ZOOM || 5;
-	let center = INITIAL_CENTER;
-	let mouseProjection = 'EPSG:4326';
+	IDEE.language.setLang(window.localStorage.i18nextLng);
+	let mouseProjection, center, zoom;
 
 	// PARSE THE GET PARAMETERS FROM THE URL
 	if (window.location.search.length > 0) {
-		const arrayParams = new URLSearchParams(window.location.search.replace('?', ''));
-		const zoomParam = arrayParams.get('zoom');
-		if (zoomParam !== null) {
-			zoom = parseInt(zoomParam, 10) || zoom;
-		}
-		mouseProjection = arrayParams.get('srs') || mouseProjection;
+		const arrayParams = new URLSearchParams(window.location.search.replace('?', ''));		
+		zoom = arrayParams.get('zoom') && (!isNaN(arrayParams.get('zoom'))) ? parseInt(arrayParams.get('zoom'), 10) : (IDEE.config.MAP_VIEWER_ZOOM || 5);
+		mouseProjection = arrayParams.get('srs') || PROJECTION;
 
-		center = arrayParams.get('center')
-			? arrayParams.get('center').split(',').map((coord) => parseFloat(coord))
-			: center;
-		center = center === INITIAL_CENTER
-			? center
-			: transformCoordinates(center, mouseProjection, PROJECTION);
+		center = arrayParams?.get('center')?.split(',').map((coord) => parseFloat(coord)) || INITIAL_CENTER;
+		if (center !== INITIAL_CENTER) {
+			center = ol?.proj?.transform(coordinates, mouseProjection, PROJECTION);
+		}
 	}
 
-	disableTerrainForOpenLayers();
-	await waitForMapContainerLayout();
-
-	mapjs = window.IDEE.map({
+	mapjs = IDEE.map({
 		container: 'map',
-		// controls: Utils.isMobile() ? ['rotate', 'location'] : ['scale*true'],
 		controls: ['attributions*<p><b>CC-BY 4.0</b>: <a style="color: #0000FF" href="https://www.scne.es" target="_blank">scne</a></p>', 'scale'],
 		center: center,
+		projection: mouseProjection,
 		zoom: zoom,
 		minZoom: 0,
 		maxZoom: 20,
 	});
 	window.mapjs = mapjs;
-	const portalUrl = process.env.NEXT_PUBLIC_GNEIS_PORTAL_URL;
+	
 	// Plugins
-    const viewmanagement = new window.IDEE.plugin.ViewManagement({
-		position: 'BL',
-		predefinedZoom: [
-		  {
-			name: 'Zoom Inicial',
-			center: [-428106.86611520057, 4334472.25393817],
-			zoom: zoom,
-		  }]
-	});
 
-    const measurebar = new window.IDEE.plugin.MeasureBar({
-		position: 'BR'
-	});
-
-    const rastermanagement = new window.IDEE.plugin.RasterManagement({
+    const rastermanagement = new IDEE.plugin.RasterManagement({
 		position: 'TR',
 		order: 1
 	});
-
-	const layerswitcher = new window.IDEE.plugin.Layerswitcher({
+	
+	const layerswitcher = new IDEE.plugin.Layerswitcher({
+		position: 'TR',
 		order: 2,
 		precharged: {
 			groups: [{
@@ -295,8 +135,213 @@ export const initMap = async (block, unblock, sessionAuth) => {
 			}],
 		  }		  
 	});
+	
+	const vectorsmanagement = new IDEE.plugin.VectorsManagement({
+		position: 'TR',
+		order: 3,
+	});
+	const backimglayer = new IDEE.plugin.BackImgLayer({
+		position: 'TR',
+		order: 4,
+		layerId: 0,
+		layerVisibility: true,
+		collapsed: true,
+		collapsible: true,
+		columnsNumber: 4,
+		empty: false,
+		layerOpts: [{
+			id: 'mapa',
+			preview: MAPA.src,
+			title: i18next.t('visor.street_map'),
+			layers: [
+			  new IDEE.layer.TMS({
+				url: 'https://tms-ign-base.idee.es/1.0.0/IGNBaseGris/{z}/{x}/{-y}.jpeg',
+				name: 'IGNBaseGris',
+				legend: i18next.t('visor.street_map'),
+				matrixSet: 'GoogleMapsCompatible',
+				isBase: true,
+				displayInLayerSwitcher: false,
+				queryable: false,
+				tileGridMaxZoom: 17,
+			  },{
+					displayInLayerSwitcher: false,
+				}),
+			],
+		  }, {
+			id: 'raster',
+			preview: RASTER.src,
+			title: i18next.t('visor.map'),
+			layers: [
+			  new IDEE.layer.WMTS({
+				url: 'https://www.ign.es/wmts/mapa-raster?',
+				name: 'MTN',
+				legend: i18next.t('visor.map'),
+				matrixSet: 'GoogleMapsCompatible',
+				isBase: true,
+				displayInLayerSwitcher: false,
+				queryable: false,
+				visible: true,
+				format: 'image/jpeg',
+			  },{displayInLayerSwitcher: false}),
+			],
+		  },
+		  {
+			id: 'imagen',
+			preview: IMAGEN.src,
+			title: i18next.t('visor.image'),
+			layers: [
+			  new IDEE.layer.XYZ({
+				url: 'https://tms-pnoa-ma.idee.es/1.0.0/pnoa-ma/{z}/{x}/{-y}.jpeg',
+				name: 'PNOA-MA',
+				legend: i18next.t('visor.image'),
+				projection: 'EPSG:3857',
+				isBase: true,
+				displayInLayerSwitcher: false,
+				queryable: false,
+				visible: true,
+				tileGridMaxZoom: 19,
+			  }),
+			],
+		  },
+		  {
+			id: 'hibrido',
+			title: i18next.t('visor.hybrid'),
+			preview: HIBRIDO.src,
+			layers: [
+			  new IDEE.layer.XYZ({
+				url: 'https://tms-pnoa-ma.idee.es/1.0.0/pnoa-ma/{z}/{x}/{-y}.jpeg',
+				name: 'PNOA-MA',
+				legend: i18next.t('visor.image'),
+				projection: 'EPSG:3857',
+				isBase: true,
+				displayInLayerSwitcher: false,
+				queryable: false,
+				visible: true,
+				tileGridMaxZoom: 19,
+			  }),
+			  new IDEE.layer.WMTS({
+				url: 'https://www.ign.es/wmts/ign-base?',
+				name: 'IGNBaseOrto',
+				matrixSet: 'GoogleMapsCompatible',
+				legend: i18next.t('visor.toponyms'),
+				transparent: true,
+				displayInLayerSwitcher: false,
+				queryable: false,
+				visible: true,
+				format: 'image/png',
+			  },{displayInLayerSwitcher: false}),
+			],
+		  },
+		  {
+			id: 'lidar',
+			preview: LIDAR.src,
+			title: i18next.t('visor.lidar'),
+			layers: [
+			  new IDEE.layer.WMTS({
+				url: 'https://wmts-mapa-lidar.idee.es/lidar?',
+				name: 'EL.GridCoverageDSM',
+				legend: i18next.t('visor.lidar'),
+				matrixSet: 'GoogleMapsCompatible',
+				isBase: true,
+				displayInLayerSwitcher: false,
+				queryable: false,
+				visible: true,
+				format: 'image/png',
+			  },{displayInLayerSwitcher: false}),
+			],
+		  },
+		  {
+			id: 'ocupacion-suelo',
+			preview: OCUPACION.src,
+			title: i18next.t('visor.corine'),
+			layers: [
+			  new IDEE.layer.WMTS({
+				url: 'https://servicios.idee.es/wmts/ocupacion-suelo?',
+				name: 'LC.LandCoverSurfaces',
+				legend: i18next.t('visor.corine'),
+				matrixSet: 'GoogleMapsCompatible',
+				isBase: true,
+				displayInLayerSwitcher: false,
+				queryable: false,
+				visible: true,
+				format: 'image/png',
+			  },{displayInLayerSwitcher: false}),
+			],
+		  },
+		  {
+			id: 'historicos',
+			preview: HISTORICOS.src,
+			title: i18next.t('visor.historic'),
+			layers: [
+			  new IDEE.layer.WMTS({
+				url: 'https://www.ign.es/wmts/primera-edicion-mtn?',
+				name: 'mtn50-edicion1',
+				legend: i18next.t('visor.historic'),
+				matrixSet: 'GoogleMapsCompatible',
+				isBase: true,
+				displayInLayerSwitcher: false,
+				queryable: false,
+				visible: true,
+				format: 'image/jpeg',
+			  },{displayInLayerSwitcher: false}),
+			],
+		  }, {
+			id: 'ciudadano',
+			preview: CIUDADANO.src,
+			title: i18next.t('visor.ciudadano'),
+			layers: [
+				new window.IDEE.layer.MapLibre({
+					url: "https://vt-mapabase.idee.es/files/styles/mapaBase_scn_color1_CNIG.json",
+					name: "mapa_ciudadano",
+					legend: i18next.t('visor.ciudadano'),
+					isBase: true,
+					displayInLayerSwitcher: false,
+					queryable: false,
+					visible: true,
+					format: "image/jpeg"
+				},{
+					displayInLayerSwitcher: false
+				}),
+			]
+		  }
+		]
+	});
 
-	const help = new window.IDEE.plugin.Help({
+	const infocoordinates = new IDEE.plugin.Infocoordinates({
+		position: 'TR',
+		order: 5
+	});
+
+	IDEE.plugin.Locator.getJSONTranslations('es').search_direction = 'Población, municipio, provincia o CC. AA';
+	IDEE.plugin.Locator.getJSONTranslations('en').search_direction = 'Locality, municipality, province or Autonomic Community';
+
+	const locator = new IDEE.plugin.Locator({
+		position: 'TC',
+		tooltip: IDEE.plugin.Locator.getJSONTranslations(IDEE.language.getLang()).search_direction,
+		byPlaceAddressPostal: {
+			noProcess: 'carretera,expendeduria,ngbe,callejero,portal,toponimo,punto_recarga_electrica',
+		},
+		byParcelCadastre: false,
+		byCoordinates: false,
+	});
+
+	const mousesrs = new IDEE.plugin.MouseSRS();
+
+	const measurebar = new IDEE.plugin.MeasureBar({
+		position: 'BR'
+	});
+
+	const viewmanagement = new IDEE.plugin.ViewManagement({
+		position: 'BL',
+		predefinedZoom: [
+		  {
+			name: 'Zoom Inicial',
+			center: [-428106.86611520057, 4334472.25393817],
+			zoom: zoom,
+		  }]
+	});
+	
+	const help = new IDEE.plugin.Help({
 		position: 'BL',
 		header: {
 			title: 'Visualizador GNEIS',
@@ -342,261 +387,53 @@ If you need more information about the service or the access profiles, consult t
 			}],
 		}
 	});
-	const infocoordinates = new window.IDEE.plugin.Infocoordinates({
-		position: 'TR',
-		order: 5
-	});
-	const mousesrs = new window.IDEE.plugin.MouseSRS();
-	const vectorsmanagement = new window.IDEE.plugin.VectorsManagement({
-		order: 3,
-	});
-	const backimglayer = new window.IDEE.plugin.BackImgLayer({
-		order: 4,
-		position: 'TR',
-		layerId: 0,
-		layerVisibility: true,
-		collapsed: true,
-		collapsible: true,
-		columnsNumber: 4,
-		empty: false,
-		layerOpts: [{
-			id: 'mapa',
-			preview: MAPA_SRC,
-			title: i18n.t('visor.street_map'),
-			layers: [
-			  new IDEE.layer.TMS({
-				url: 'https://tms-ign-base.idee.es/1.0.0/IGNBaseGris/{z}/{x}/{-y}.jpeg',
-				name: 'IGNBaseGris',
-				legend: i18n.t('visor.street_map'),
-				matrixSet: 'GoogleMapsCompatible',
-				isBase: true,
-				displayInLayerSwitcher: false,
-				queryable: false,
-				tileGridMaxZoom: 17,
-			  },{
-					displayInLayerSwitcher: false,
-				}),
-			],
-		  }, {
-			id: 'raster',
-			preview: RASTER_SRC,
-			title: i18n.t('visor.map'),
-			layers: [
-			  new IDEE.layer.WMTS({
-				url: 'https://www.ign.es/wmts/mapa-raster?',
-				name: 'MTN',
-				legend: i18n.t('visor.map'),
-				matrixSet: 'GoogleMapsCompatible',
-				isBase: true,
-				displayInLayerSwitcher: false,
-				queryable: false,
-				visible: true,
-				format: 'image/jpeg',
-			  },{displayInLayerSwitcher: false}),
-			],
-		  },
-		  {
-			id: 'imagen',
-			preview: IMAGEN_SRC,
-			title: i18n.t('visor.image'),
-			layers: [
-			  new IDEE.layer.XYZ({
-				url: 'https://tms-pnoa-ma.idee.es/1.0.0/pnoa-ma/{z}/{x}/{-y}.jpeg',
-				name: 'PNOA-MA',
-				legend: i18n.t('visor.image'),
-				projection: 'EPSG:3857',
-				isBase: true,
-				displayInLayerSwitcher: false,
-				queryable: false,
-				visible: true,
-				tileGridMaxZoom: 19,
-			  }),
-			],
-		  },
-		  {
-			id: 'hibrido',
-			title: i18n.t('visor.hybrid'),
-			preview: HIBRIDO_SRC,
-			layers: [
-			  new IDEE.layer.XYZ({
-				url: 'https://tms-pnoa-ma.idee.es/1.0.0/pnoa-ma/{z}/{x}/{-y}.jpeg',
-				name: 'PNOA-MA',
-				legend: i18n.t('visor.image'),
-				projection: 'EPSG:3857',
-				isBase: true,
-				displayInLayerSwitcher: false,
-				queryable: false,
-				visible: true,
-				tileGridMaxZoom: 19,
-			  }),
-			  new IDEE.layer.WMTS({
-				url: 'https://www.ign.es/wmts/ign-base?',
-				name: 'IGNBaseOrto',
-				matrixSet: 'GoogleMapsCompatible',
-				legend: i18n.t('visor.toponyms'),
-				transparent: true,
-				displayInLayerSwitcher: false,
-				queryable: false,
-				visible: true,
-				format: 'image/png',
-			  },{displayInLayerSwitcher: false}),
-			],
-		  },
-		  {
-			id: 'lidar',
-			preview: LIDAR_SRC,
-			title: i18n.t('visor.lidar'),
-			layers: [
-			  new IDEE.layer.WMTS({
-				url: 'https://wmts-mapa-lidar.idee.es/lidar?',
-				name: 'EL.GridCoverageDSM',
-				legend: i18n.t('visor.lidar'),
-				matrixSet: 'GoogleMapsCompatible',
-				isBase: true,
-				displayInLayerSwitcher: false,
-				queryable: false,
-				visible: true,
-				format: 'image/png',
-			  },{displayInLayerSwitcher: false}),
-			],
-		  },
-		  {
-			id: 'ocupacion-suelo',
-			preview: OCUPACION_SRC,
-			title: i18n.t('visor.corine'),
-			layers: [
-			  new IDEE.layer.WMTS({
-				url: 'https://servicios.idee.es/wmts/ocupacion-suelo?',
-				name: 'LC.LandCoverSurfaces',
-				legend: i18n.t('visor.corine'),
-				matrixSet: 'GoogleMapsCompatible',
-				isBase: true,
-				displayInLayerSwitcher: false,
-				queryable: false,
-				visible: true,
-				format: 'image/png',
-			  },{displayInLayerSwitcher: false}),
-			],
-		  },
-		  {
-			id: 'historicos',
-			preview: HISTORICOS_SRC,
-			title: i18n.t('visor.historic'),
-			layers: [
-			  new IDEE.layer.WMTS({
-				url: 'https://www.ign.es/wmts/primera-edicion-mtn?',
-				name: 'mtn50-edicion1',
-				legend: i18n.t('visor.historic'),
-				matrixSet: 'GoogleMapsCompatible',
-				isBase: true,
-				displayInLayerSwitcher: false,
-				queryable: false,
-				visible: true,
-				format: 'image/jpeg',
-			  },{displayInLayerSwitcher: false}),
-			],
-		  }, {
-			id: 'ciudadano',
-			preview: CIUDADANO_SRC,
-			title: i18n.t('visor.ciudadano'),
-			layers: [
-				new window.IDEE.layer.MapLibre({
-					url: "https://vt-mapabase.idee.es/files/styles/mapaBase_scn_color1_CNIG.json",
-					name: "mapa_ciudadano",
-					legend: i18n.t('visor.ciudadano'),
-					isBase: true,
-					displayInLayerSwitcher: false,
-					queryable: false,
-					visible: true,
-					format: "image/jpeg"
-				},{
-					displayInLayerSwitcher: false
-				}),
-			]
-		  }
-		]
-	});
 
-	const stacUrl = process.env.NEXT_PUBLIC_GNEIS_STAC_URL;
-	// sessionAuth !== undefined → standalone (login / invitado / sesión restaurada)
-	// undefined → embebido: pedir token al padre
-	const parentAuth =
-		sessionAuth !== undefined ? sessionAuth : await requestParentAuth();
-	const hasToken = !!parentAuth?.access_token;
+	/*****************/
+	/* PLUGIN GNEIS */
+	/*****************/
+		// sessionAuth !== undefined → standalone (login / invitado / sesión restaurada)
+		// undefined → embebido: pedir token al padre
+		const parentAuth = sessionAuth ? sessionAuth : await requestParentAuth();
+		const hasToken = !!parentAuth?.access_token;
 
-	console.info('[Visor:initMap] parentAuth resultado', {
-		hasAccessToken: hasToken,
-		hasRefreshToken: !!parentAuth?.refresh_token,
-		standalone: sessionAuth !== undefined,
-	});
+		console.info('[Visor:initMap] parentAuth resultado', {
+			hasAccessToken: hasToken,
+			hasRefreshToken: !!parentAuth?.refresh_token,
+			standalone: sessionAuth !== undefined,
+		});
 
-	installParentAuthOnCatalog(parentAuth);
+		installParentAuthOnCatalog(parentAuth);
 
-	// STAC/descarga públicos; el listado filtrado (solo públicas vs públicas+suyas)
-	// lo resuelve Liferay según haya o no token.
-	const gneisCatalog = {
-		title: 'GNEIS',
-		url: stacUrl,
-		collectionsUrl: `${portalUrl}/o/custom-auth/collections`,
-		public: !hasToken,
-	};
+		// STAC/descarga públicos; el listado filtrado (solo públicas vs públicas+suyas)
+		// lo resuelve Liferay según haya o no token.
+		const gneisCatalog = {
+			title: 'GNEIS',
+			url: stacUrl,
+			collectionsUrl: `${portalUrl}/o/custom-auth/collections`,
+			public: !hasToken,
+		};
 
-	if (hasToken) {
-		gneisCatalog.authUrl = `${portalUrl}/o/custom-auth/token`;
-	}
+		if (hasToken) {
+			gneisCatalog.authUrl = `${portalUrl}/o/custom-auth/token`;
+		}
 
-	const catalogmanager = new window.IDEE.plugin.Catalogmanager({
-		addCatalogEnabled: false,
-		downloadUrl: process.env.NEXT_PUBLIC_GNEIS_DOWNLOAD_URL,
-		collapsed: false,
-		position: 'TL',
-		predefinedCatalogs: [gneisCatalog]
-	});
+		const catalogmanager = new window.IDEE.plugin.Catalogmanager({
+			addCatalogEnabled: false,
+			downloadUrl: process.env.NEXT_PUBLIC_GNEIS_DOWNLOAD_URL,
+			collapsed: false,
+			position: 'TL',
+			predefinedCatalogs: [gneisCatalog]
+		});
 
-	IDEE.plugin.Locator.getJSONTranslations('es').search_direction = 'Población, municipio, provincia o CC. AA';
-	IDEE.plugin.Locator.getJSONTranslations('en').search_direction = 'Locality, municipality, province or Autonomic Community';
-
-	const locator = new window.IDEE.plugin.Locator({
-		position: 'TC',
-		tooltip: IDEE.plugin.Locator.getJSONTranslations(IDEE.language.getLang()).search_direction,
-		byPlaceAddressPostal: {
-			noProcess: 'carretera,expendeduria,ngbe,callejero,portal,toponimo,punto_recarga_electrica',
-		},
-		byParcelCadastre: false,
-		byCoordinates: false,
-	});
+	
 	mapjs.addPlugins([viewmanagement, measurebar, rastermanagement, layerswitcher, help, infocoordinates, mousesrs, vectorsmanagement, backimglayer, catalogmanager, locator]);
 
-	const mapImpl = mapjs.getMapImpl();
 
-	scheduleMapSizeSync(mapImpl);
-
-	let unblocked = false;
-	const safeUnblock = () => {
-		if (unblocked) {
-			return;
-		}
-
-		unblocked = true;
+	mapjs.once('postrender', () => {
+		setMapStarted();
 		unblock();
-	};
-
-	try {
-		if (mapImpl?.once) {
-			mapImpl.once('postrender', () => {
-				safeUpdateMapSize(mapImpl);
-				safeUnblock();
-			});
-		}
-		else {
-			safeUnblock();
-		}
-	}
-	catch (err) {
-		console.warn('[Visor:initMap] once(postrender) falló', err);
-		safeUnblock();
-	}
+	});
 
 	// Si el mapa no renderiza (contenedor 0x0 / error OL), no dejar el loader eterno.
-	window.setTimeout(safeUnblock, 3000);
+	window.setTimeout(unblock, 3000);
 };
