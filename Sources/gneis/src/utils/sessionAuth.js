@@ -77,9 +77,7 @@ export function getActiveAuth() {
  * @returns {VisorAuth|null}
  */
 function normalizeAuth(auth) {
-	if (!auth?.access_token) {
-		return null;
-	}
+	if (!auth?.access_token) return null;
 
 	const previous = activeAuth;
 
@@ -102,6 +100,26 @@ function normalizeAuth(auth) {
 }
 
 /**
+ * @param {Record<string, any>|null|undefined} data
+ * @param {VisorAuth|null|undefined} previous
+ * @returns {VisorAuth|null}
+ */
+function buildAuthFromResponse(data, previous = null) {
+	if (!data || typeof data !== 'object' || !data.access_token) return null;
+
+	return normalizeAuth({
+		access_token: data.access_token,
+		refresh_token: data.refresh_token || previous?.refresh_token || null,
+		expires_in: data.expires_in || previous?.expires_in || 3600,
+		roles: Array.isArray(data.roles) ? data.roles : previous?.roles || [],
+		collections: Array.isArray(data.collections)
+			? data.collections
+			: previous?.collections || [],
+		user: data.user !== undefined ? data.user : previous?.user || null,
+	});
+}
+
+/**
  * @param {VisorAuth|null} auth
  */
 export function setActiveAuth(auth) {
@@ -109,18 +127,30 @@ export function setActiveAuth(auth) {
 
 	if (activeAuth) {
 		saveStoredAuth(activeAuth);
-	}
-	else {
+	} else {
 		clearStoredAuth();
 	}
 
 	notifyAuthChanged();
 }
 
-function notifyAuthChanged() {
-	if (typeof window === 'undefined') {
-		return;
+/**
+ * @param {Response} response
+ * @returns {Promise<Record<string, any>|null>}
+ */
+async function parseJsonResponse(response) {
+	const text = await response.text();
+	if (!text) return null;
+
+	try {
+		return JSON.parse(text);
+	} catch (err) {
+		return null;
 	}
+}
+
+function notifyAuthChanged() {
+	if (typeof window === 'undefined') return;
 
 	window.dispatchEvent(
 		new CustomEvent(AUTH_CHANGED_EVENT, {
@@ -135,15 +165,11 @@ function notifyAuthChanged() {
  * @returns {'Admin'|'AA:PP'|'General'|null}
  */
 export function resolveProfileLabel(roles) {
-	if (!Array.isArray(roles) || roles.length === 0) {
-		return null;
-	}
+	if (!Array.isArray(roles) || roles.length === 0) return null;
 
 	const normalized = roles.map((role) => String(role).trim().toLowerCase());
 
-	if (normalized.some((role) => role === 'administrator' || role === 'admin')) {
-		return 'Admin';
-	}
+	if (normalized.some((role) => role === 'administrator' || role === 'admin')) return 'Admin';
 
 	if (normalized.some((role) =>
 		role === 'aa:pp' ||
@@ -154,9 +180,7 @@ export function resolveProfileLabel(roles) {
 		return 'AA:PP';
 	}
 
-	if (normalized.some((role) => role === 'general')) {
-		return 'General';
-	}
+	if (normalized.some((role) => role === 'general')) return 'General';
 
 	return null;
 }
@@ -167,16 +191,10 @@ export function resolveProfileLabel(roles) {
  */
 export function resolveUserEmail(auth) {
 	const email = auth?.user?.emailAddress;
-
-	if (email && typeof email === 'string' && email.trim()) {
-		return email.trim();
-	}
+	if (email && typeof email === 'string' && email.trim()) return email.trim();
 
 	const screenName = auth?.user?.screenName;
-
-	if (screenName && typeof screenName === 'string' && screenName.trim()) {
-		return screenName.trim();
-	}
+	if (screenName && typeof screenName === 'string' && screenName.trim()) return screenName.trim();
 
 	return null;
 }
@@ -229,9 +247,7 @@ export function resetAuthLoopGuard() {
  * Si había sesión, la destruye para volver a Login.
  */
 export function exhaustAuthRefresh(reason = 'stac_401_after_refresh') {
-	if (authRefreshExhausted) {
-		return;
-	}
+	if (authRefreshExhausted) return;
 
 	authRefreshExhausted = true;
 	stopTokenRefresh();
@@ -263,23 +279,15 @@ function isRefreshTokenUrl(url) {
  * @returns {boolean}
  */
 function isStacApiUrl(url) {
-	if (typeof url !== 'string' || !url) {
-		return false;
-	}
+	if (!url || typeof url !== 'string' ) return false;
 
 	const stacBase = process.env.NEXT_PUBLIC_GNEIS_STAC_URL || '';
-
-	if (stacBase && url.startsWith(stacBase.replace(/\/$/, ''))) {
-		return true;
-	}
+	if (stacBase && url.startsWith(stacBase.replace(/\/$/, ''))) return true;
 
 	try {
-		const host = new URL(url, typeof window !== 'undefined' ? window.location.href : undefined)
-			.hostname;
-
+		const host = new URL(url, typeof window !== 'undefined' ? window.location.href : undefined).hostname;
 		return host.includes('stac-gneis') || host.includes('stac.');
-	}
-	catch (err) {
+	} catch (err) {
 		return false;
 	}
 }
@@ -289,14 +297,11 @@ function isStacApiUrl(url) {
  * @returns {string}
  */
 function normalizeRequestUrl(url) {
-	if (!url) {
-		return '';
-	}
+	if (!url) return '';
 
 	try {
 		return new URL(url, typeof window !== 'undefined' ? window.location.href : undefined).href;
-	}
-	catch (err) {
+	} catch (err) {
 		return String(url);
 	}
 }
@@ -308,16 +313,13 @@ function registerRefreshAttempt() {
 	const now = Date.now();
 
 	refreshCallTimestamps = refreshCallTimestamps.filter(
-		(ts) => now - ts < REFRESH_WINDOW_MS,
+		(ts) => now - ts < REFRESH_WINDOW_MS
 	);
 
-	if (authRefreshExhausted) {
-		return false;
-	}
+	if (authRefreshExhausted) return false;
 
 	if (refreshCallTimestamps.length >= MAX_REFRESH_CALLS_IN_WINDOW) {
 		exhaustAuthRefresh('max_refresh_calls_in_window');
-
 		return false;
 	}
 
@@ -359,24 +361,17 @@ function onAuthNetworkResponse(url, status) {
 		return;
 	}
 
-	if (!isStacApiUrl(normalized)) {
-		return;
-	}
+	if (!isStacApiUrl(normalized)) return;
 
 	if (status >= 200 && status < 300) {
 		stac401Pending = false;
 		refreshesAfterStac401 = 0;
-
 		return;
-	}
-
-	if (status === 401) {
+	} else if (status === 401) {
 		if (refreshesAfterStac401 >= MAX_REFRESH_BEFORE_STAC_OK) {
 			exhaustAuthRefresh('stac_401_after_refresh');
-
 			return;
 		}
-
 		stac401Pending = true;
 	}
 }
@@ -385,11 +380,7 @@ function onAuthNetworkResponse(url, status) {
  * Intercepta fetch + XHR (API-IDEE usa XHR) para limitar refresh tras 401 STAC.
  */
 export function installAuthLoopGuard() {
-	if (typeof window === 'undefined' || authLoopGuardInstalled) {
-		return;
-	}
-
-	authLoopGuardInstalled = true;
+	if (typeof window === 'undefined' || authLoopGuardInstalled)  return;
 
 	const originalFetch = window.fetch.bind(window);
 
@@ -416,8 +407,7 @@ export function installAuthLoopGuard() {
 
 		try {
 			onAuthNetworkResponse(url, response.status);
-		}
-		catch (err) {
+		} catch (err) {
 			console.warn(LOG_PREFIX, 'Error en auth loop guard (fetch)', err);
 		}
 
@@ -434,7 +424,6 @@ export function installAuthLoopGuard() {
 
 		xhr.open = function open(method, url, ...rest) {
 			requestUrl = normalizeRequestUrl(String(url));
-
 			return originalOpen.call(this, method, url, ...rest);
 		};
 
@@ -462,8 +451,7 @@ export function installAuthLoopGuard() {
 		xhr.addEventListener('load', () => {
 			try {
 				onAuthNetworkResponse(requestUrl, xhr.status);
-			}
-			catch (err) {
+			} catch (err) {
 				console.warn(LOG_PREFIX, 'Error en auth loop guard (xhr)', err);
 			}
 		});
@@ -475,14 +463,12 @@ export function installAuthLoopGuard() {
 	Object.keys(OriginalXHR).forEach((key) => {
 		try {
 			GuardedXMLHttpRequest[key] = OriginalXHR[key];
-		}
-		catch (err) {
-			// ignore read-only
-		}
+		} catch (err) { } // ignore read-only
 	});
 
 	window.XMLHttpRequest = /** @type {typeof XMLHttpRequest} */ (GuardedXMLHttpRequest);
 
+	authLoopGuardInstalled = true;
 	console.info(LOG_PREFIX, 'Auth loop guard instalado');
 }
 
@@ -503,8 +489,7 @@ function saveStoredAuth(auth) {
 				savedAt: Date.now(),
 			}),
 		);
-	}
-	catch (err) {
+	} catch (err) {
 		console.warn(LOG_PREFIX, 'No se pudo guardar sesión', err);
 	}
 }
@@ -512,10 +497,7 @@ function saveStoredAuth(auth) {
 export function clearStoredAuth() {
 	try {
 		window.sessionStorage.removeItem(STORAGE_KEY);
-	}
-	catch (err) {
-		// ignore
-	}
+	} catch (err) { }
 }
 
 /**
@@ -524,16 +506,10 @@ export function clearStoredAuth() {
 export function loadStoredAuth() {
 	try {
 		const raw = window.sessionStorage.getItem(STORAGE_KEY);
-
-		if (!raw) {
-			return null;
-		}
+		if (!raw) return null;
 
 		const parsed = JSON.parse(raw);
-
-		if (!parsed?.access_token) {
-			return null;
-		}
+		if (!parsed?.access_token) return null;
 
 		return {
 			access_token: parsed.access_token,
@@ -544,8 +520,7 @@ export function loadStoredAuth() {
 			user: parsed.user || null,
 			savedAt: parsed.savedAt || 0,
 		};
-	}
-	catch (err) {
+	} catch (err) {
 		return null;
 	}
 }
@@ -574,15 +549,7 @@ export async function loginWithPassword(username, password) {
 		}),
 	});
 
-	const text = await response.text();
-	let data = null;
-
-	try {
-		data = text ? JSON.parse(text) : null;
-	}
-	catch (err) {
-		data = null;
-	}
+	const data = await parseJsonResponse(response);
 
 	if (!response.ok || !data?.access_token) {
 		const message =
@@ -593,14 +560,7 @@ export async function loginWithPassword(username, password) {
 		throw new Error(message);
 	}
 
-	const auth = {
-		access_token: data.access_token,
-		refresh_token: data.refresh_token || null,
-		expires_in: data.expires_in || 3600,
-		roles: Array.isArray(data.roles) ? data.roles : [],
-		collections: Array.isArray(data.collections) ? data.collections : [],
-		user: data.user || null,
-	};
+	const auth = buildAuthFromResponse(data);
 
 	resetAuthLoopGuard();
 	setActiveAuth(auth);
@@ -640,15 +600,7 @@ export async function refreshAccessToken(refreshToken) {
 		}),
 	});
 
-	const text = await response.text();
-	let data = null;
-
-	try {
-		data = text ? JSON.parse(text) : null;
-	}
-	catch (err) {
-		data = null;
-	}
+	const data = await parseJsonResponse(response);
 
 	if (!response.ok || !data?.access_token) {
 		const message =
@@ -663,18 +615,7 @@ export async function refreshAccessToken(refreshToken) {
 		throw new Error('Refresh bloqueado (bucle de auth)');
 	}
 
-	const previous = getActiveAuth();
-
-	const auth = {
-		access_token: data.access_token,
-		refresh_token: data.refresh_token || refreshToken,
-		expires_in: data.expires_in || 3600,
-		roles: Array.isArray(data.roles) ? data.roles : (previous?.roles || []),
-		collections: Array.isArray(data.collections)
-			? data.collections
-			: (previous?.collections || []),
-		user: data.user !== undefined ? data.user : (previous?.user || null),
-	};
+	const auth = buildAuthFromResponse(data, getActiveAuth());
 
 	setActiveAuth(auth);
 	console.info(LOG_PREFIX, 'Token renovado', {
@@ -694,9 +635,7 @@ export function scheduleTokenRefresh(auth) {
 		refreshTimerId = null;
 	}
 
-	if (!auth?.refresh_token || typeof window === 'undefined') {
-		return;
-	}
+	if (!auth?.refresh_token || typeof window === 'undefined') return;
 
 	const expiresInMs = Math.max(60, auth.expires_in || 3600) * 1000;
 	const delayMs = Math.max(30_000, Math.floor(expiresInMs * 0.8));
@@ -712,8 +651,7 @@ export function scheduleTokenRefresh(auth) {
 
 			const next = await refreshAccessToken(refreshToken);
 			scheduleTokenRefresh(next);
-		}
-		catch (err) {
+		} catch (err) {
 			console.error(LOG_PREFIX, 'No se pudo renovar el token', err);
 			logout({ reason: 'refresh_failed', expired: true });
 		}
@@ -735,35 +673,28 @@ export function stopTokenRefresh() {
  */
 export async function restoreStandaloneSession() {
 	const stored = loadStoredAuth();
-
-	if (!stored) {
-		return null;
-	}
+	if (!stored) return null;
 
 	const ageMs = Date.now() - (stored.savedAt || 0);
 	const expiresInMs = (stored.expires_in || 3600) * 1000;
-	const shouldRefresh =
-		!!stored.refresh_token && ageMs > expiresInMs * 0.5;
+	const shouldRefresh = !!stored.refresh_token && ageMs > expiresInMs * 0.5;
 
 	try {
+		resetAuthLoopGuard();
+
 		if (shouldRefresh) {
-			resetAuthLoopGuard();
 			const next = await refreshAccessToken(stored.refresh_token);
 			scheduleTokenRefresh(next);
-
 			return next;
 		}
 
-		resetAuthLoopGuard();
 		setActiveAuth(stored);
 		scheduleTokenRefresh(stored);
-
 		return stored;
-	}
-	catch (err) {
+	
+	} catch (err) {
 		console.warn(LOG_PREFIX, 'Sesión guardada inválida', err);
 		logout({ reason: 'restore_failed', expired: true });
-
 		return null;
 	}
 }

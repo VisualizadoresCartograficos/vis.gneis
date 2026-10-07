@@ -1,7 +1,6 @@
 'use client';
-
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import i18next from '@/app/languages/i18n';
 
 import './LoginModal.css';
 
@@ -23,7 +22,6 @@ export default function LoginModal({
 	allowGuest = true,
 	busy = false,
 }) {
-	const { t } = useTranslation();
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [error, setError] = useState('');
@@ -36,8 +34,7 @@ export default function LoginModal({
 		setError('');
 
 		if (!username.trim() || !password) {
-			setError(t('login.errorRequired'));
-
+			setError(i18next.t('login.errorRequired'));
 			return;
 		}
 
@@ -47,34 +44,28 @@ export default function LoginModal({
 			await onLogin(username.trim(), password);
 		}
 		catch (err) {
-			setError(err?.message || t('login.errorGeneric'));
+			setError(err?.message || i18next.t('login.errorGeneric'));
 			setSubmitting(false);
 		}
 	};
 
 	return (
-		<div
-			aria-labelledby="gneis-login-title"
-			aria-modal="true"
-			className="gneis-login-modal"
-			role="dialog"
-		>
+		<div aria-labelledby="gneis-login-title" aria-modal="true" className="gneis-login-modal" role="dialog">
 			<div
 				className="gneis-login-modal__backdrop"
 				onClick={onClose}
 				onKeyDown={(event) => {
-					if (onClose && (event.key === 'Escape' || event.key === 'Enter')) {
+					if (event.key === 'Escape' || event.key === 'Enter') {
 						onClose();
 					}
-				}
-				}
+				}}
 				role={onClose ? 'button' : undefined}
 				tabIndex={onClose ? 0 : undefined}
 			/>
 			<div className="gneis-login-modal__panel">
-				{onClose ? (
+				{onClose && (
 					<button
-						aria-label={t('login.close')}
+						aria-label={i18next.t('login.close')}
 						className="gneis-login-modal__close"
 						disabled={disabled}
 						onClick={onClose}
@@ -82,19 +73,13 @@ export default function LoginModal({
 					>
 						×
 					</button>
-				) : null}
+				)}
 
-				<h2 className="gneis-login-modal__title" id="gneis-login-title">
-					{t('login.title')}
-				</h2>
-				<p className="gneis-login-modal__subtitle">
-					{t('login.subtitle')}
-				</p>
+				<h2 className="gneis-login-modal__title" id="gneis-login-title"> {i18next.t('login.title')} </h2>
+				<p className="gneis-login-modal__subtitle"> {i18next.t('login.subtitle')} </p>
 
 				<form className="gneis-login-modal__form" onSubmit={handleSubmit}>
-					<label className="gneis-login-modal__label" htmlFor="gneis-login-user">
-						{t('login.username')}
-					</label>
+					<label className="gneis-login-modal__label" htmlFor="gneis-login-user"> {i18next.t('login.username')} </label>
 					<input
 						autoComplete="username"
 						className="gneis-login-modal__input"
@@ -105,9 +90,7 @@ export default function LoginModal({
 						value={username}
 					/>
 
-					<label className="gneis-login-modal__label" htmlFor="gneis-login-pass">
-						{t('login.password')}
-					</label>
+					<label className="gneis-login-modal__label" htmlFor="gneis-login-pass"> {i18next.t('login.password')} </label>
 					<input
 						autoComplete="current-password"
 						className="gneis-login-modal__input"
@@ -118,31 +101,29 @@ export default function LoginModal({
 						value={password}
 					/>
 
-					{error ? (
-						<p className="gneis-login-modal__error" role="alert">
-							{error}
-						</p>
-					) : null}
+					{error && (
+						<p className="gneis-login-modal__error" role="alert"> {error} </p>
+					)}
 
 					<button
 						className="gneis-login-modal__btn gneis-login-modal__btn--primary"
 						disabled={disabled}
 						type="submit"
 					>
-						{submitting ? t('login.loggingIn') : t('login.submit')}
+						{submitting ? i18next.t('login.loggingIn') : i18next.t('login.submit')}
 					</button>
 				</form>
 
-				{allowGuest ? (
+				{allowGuest && (
 					<button
 						className="gneis-login-modal__btn gneis-login-modal__btn--guest"
 						disabled={disabled}
 						onClick={onGuest}
 						type="button"
 					>
-						{t('login.guest')}
+						{i18next.t('login.guest')}
 					</button>
-				) : null}
+				)}
 			</div>
 		</div>
 	);

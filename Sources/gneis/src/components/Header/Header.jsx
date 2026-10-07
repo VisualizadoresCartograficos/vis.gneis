@@ -1,12 +1,6 @@
 'use client';
-import { Component } from 'react';
-import { withTranslation } from 'react-i18next';
-import i18n from '@/app/languages/i18n';
-
-import './Header.css';
-
-import MINISTERIO from '@/assets/logos/logo_ministerio.png';
-import GNEIS from '@/assets/logos/Logo-GNEIS.svg';
+import { useCallback, useEffect, useState } from 'react';
+import i18next from '@/app/languages/i18n';
 import {
 	AUTH_CHANGED_EVENT,
 	getActiveAuth,
@@ -14,151 +8,74 @@ import {
 	resolveUserEmail,
 } from '@/utils/sessionAuth';
 
-class Header extends Component {
-	constructor(props) {
-		super(props);
-		const auth = typeof window !== 'undefined' ? getActiveAuth() : null;
+import { getLanguage } from '@/utils/Utils';
 
-		this.state = {
-			langSelected: window.localStorage.i18nextLng || 'es',
-			auth,
-			profileLabel: resolveProfileLabel(auth?.roles),
-			userEmail: resolveUserEmail(auth),
-		};
-	}
+import './Header.css';
 
-	componentDidMount() {
-		window.addEventListener(AUTH_CHANGED_EVENT, this.handleAuthChanged);
-		this.syncAuthFromStore();
-	}
+import MINISTERIO from '@/static/logos/logo_ministerio.png';
+import GNEIS from '@/static/logos/Logo-GNEIS.svg';
 
-	componentWillUnmount() {
-		window.removeEventListener(AUTH_CHANGED_EVENT, this.handleAuthChanged);
-	}
+function Header({ onRequestLogin, onLogout }) {
+	const [langSelected, setLangSelected] = useState(getLanguage());
+	const [auth, setAuth] = useState(getActiveAuth());
+	const profileLabel = resolveProfileLabel(auth?.roles);
+	const userEmail = resolveUserEmail(auth);
+	const isLoggedIn = !!auth?.access_token;
 
-	syncAuthFromStore = () => {
-		const auth = getActiveAuth();
+	const syncAuthFromStore = useCallback(() => {
+		setAuth(getActiveAuth());
+	}, []);
 
-		this.setState({
-			auth,
-			profileLabel: resolveProfileLabel(auth?.roles),
-			userEmail: resolveUserEmail(auth),
-		});
+	useEffect(() => {
+		window.addEventListener(AUTH_CHANGED_EVENT, syncAuthFromStore);
+		syncAuthFromStore();
+
+		return () => window.removeEventListener(AUTH_CHANGED_EVENT, syncAuthFromStore);
+	}, [syncAuthFromStore]);
+
+	const changeLanguage = (lang) => {
+		setLangSelected(lang);
+		i18next.changeLanguage(lang);
+		window.location.reload();
 	};
 
-	handleAuthChanged = () => {
-		this.syncAuthFromStore();
+	const goToPortal = () => {
+		const portalUrl = process.env.NEXT_PUBLIC_GNEIS_PORTAL_URL;
+		if (portalUrl) window.location.href = portalUrl;
 	};
-
-	changeLanguage = (lang) => {
-		if (lang === this.state.langSelected) {
-			return;
-		}
-
-		this.setState({ langSelected: lang }, () => {
-			i18n.changeLanguage(lang);
-			if (window.IDEE?.language?.setLang) {
-				window.IDEE.language.setLang(lang);
-			}
-			window.location.reload();
-		});
-	};
-
-	goToPortal = () => {
-		const portalUrl = (process.env.NEXT_PUBLIC_GNEIS_PORTAL_URL || '').replace(/\/$/, '');
-
-		if (!portalUrl) {
-			console.warn('[Visor:Header] NEXT_PUBLIC_GNEIS_PORTAL_URL no configurada');
-
-			return;
-		}
-
-		window.location.href = portalUrl;
-	};
-
-	render() {
-		const { langSelected, auth, profileLabel, userEmail } = this.state;
-		const { t, onRequestLogin, onLogout } = this.props;
-		const isLoggedIn = !!auth?.access_token;
 
 		return (
 			<header className="visor-header">
 				<div className="visor-header__inner">
 					<div className="visor-header__brand">
-						<img
-							className="visor-header__logo-ministerio"
-							src={MINISTERIO.src || MINISTERIO}
-							alt={t('header.altMinisterio')}
-						/>
-						<img
-							className="visor-header__logo-gneis"
-							src={GNEIS.src || GNEIS}
-							alt={t('header.altGneis')}
-						/>
-						<span className="visor-header__claim">{t('header.brand')}</span>
+						<img src={MINISTERIO.src} className="visor-header__logo-ministerio" alt={i18next.t('header.altMinisterio')}/>
+						<img src={GNEIS.src} className="visor-header__logo-gneis" alt={i18next.t('header.altGneis')}/>
+						<span className="visor-header__claim">{i18next.t('header.brand')}</span>
 					</div>
 
 					<div className="visor-header__actions">
-						<nav className="visor-header__lang" aria-label={t('header.langSelector')}>
-							<button
-								type="button"
-								className={`visor-header__lang-link${langSelected === 'es' ? ' is-active' : ''}`}
-								onClick={() => this.changeLanguage('es')}
-								aria-current={langSelected === 'es' ? 'true' : undefined}
-							>
-								ES
-							</button>
+						<nav className="visor-header__lang" aria-label={i18next.t('header.langSelector')}>
+							<button type="button" className={`visor-header__lang-link${langSelected === 'es' ? ' is-active' : ''}`} onClick={() => changeLanguage('es')}>ES</button>
 							<span className="visor-header__lang-sep" aria-hidden="true">|</span>
-							<button
-								type="button"
-								className={`visor-header__lang-link${langSelected === 'en' ? ' is-active' : ''}`}
-								onClick={() => this.changeLanguage('en')}
-								aria-current={langSelected === 'en' ? 'true' : undefined}
-							>
-								EN
-							</button>
+							<button type="button" className={`visor-header__lang-link${langSelected === 'en' ? ' is-active' : ''}`} onClick={() => changeLanguage('en')}>EN</button>
 						</nav>
 
 						{isLoggedIn ? (
 							<>
 								<div className="visor-header__user" title={userEmail || undefined}>
-									{userEmail ? (
-										<span className="visor-header__user-email">{userEmail}</span>
-									) : null}
-									{profileLabel ? (
-										<span className="visor-header__user-role">{profileLabel}</span>
-									) : null}
+									{userEmail && ( <span className="visor-header__user-email">{userEmail}</span> )}
+									{profileLabel && ( <span className="visor-header__user-role">{profileLabel}</span> )}
 								</div>
-								<button
-									type="button"
-									className="visor-header__btn-logout"
-									onClick={onLogout}
-								>
-									{t('header.logout')}
-								</button>
+								<button type="button" className="visor-header__btn-logout" onClick={onLogout} > {i18next.t('header.logout')} </button>
 							</>
 						) : (
-							<button
-								type="button"
-								className="visor-header__btn-login"
-								onClick={onRequestLogin}
-							>
-								{t('header.login')}
-							</button>
+							<button type="button" className="visor-header__btn-login" onClick={onRequestLogin} > {i18next.t('header.login')} </button>
 						)}
-
-						<button
-							type="button"
-							className="visor-header__btn-portal"
-							onClick={this.goToPortal}
-						>
-							{t('header.portal')}
-						</button>
+						<button type="button" className="visor-header__btn-portal" onClick={goToPortal} > {i18next.t('header.portal')} </button>
 					</div>
 				</div>
-			</header>
-		);
-	}
+ 		</header>
+	);
 }
 
-export default withTranslation()(Header);
+export default Header;
